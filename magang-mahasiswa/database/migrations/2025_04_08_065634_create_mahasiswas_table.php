@@ -24,6 +24,12 @@ return new class extends Migration
             $table->string('status_magang')->default('belum magang');
             $table->float('nilai_magang')->nullable();
             $table->float('kelompok')->nullable();
+            $table->string('video_mediasi')->nullable();
+            $table->string('video_penyuluhan')->nullable();
+            $table->boolean('ceklis_penyuluhan')->default(false);
+            $table->boolean('ceklis_artikel')->default(false);
+            $table->boolean('is_luar_biasa')->default(false);
+            $table->string('link_artikel')->nullable();
             $table->timestamps();
         });
     }

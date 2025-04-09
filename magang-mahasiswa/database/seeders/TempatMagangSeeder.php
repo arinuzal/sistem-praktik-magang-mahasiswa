@@ -15,6 +15,7 @@ class TempatMagangSeeder extends Seeder
             [
                 'name' => 'PT Sinar Jaya',
                 'email' => 'sinarjaya@example.com',
+                'no_hp' => '08953921225',
                 'alamat' => 'Jl. Merdeka No. 12, Jakarta',
                 'kontak' => '02112345678',
                 'bidang_usaha' => 'Teknologi Informasi',
@@ -22,6 +23,7 @@ class TempatMagangSeeder extends Seeder
             [
                 'name' => 'CV Mandiri Abadi',
                 'email' => 'mandiriabadi@example.com',
+                'no_hp' => '08953921226',
                 'alamat' => 'Jl. Sudirman No. 5, Bandung',
                 'kontak' => '02298765432',
                 'bidang_usaha' => 'Konsultan Hukum',
@@ -29,6 +31,7 @@ class TempatMagangSeeder extends Seeder
             [
                 'name' => 'PT Amanah Utama',
                 'email' => 'amanahutama@example.com',
+                'no_hp' => '08953921227',
                 'alamat' => 'Jl. Gajah Mada No. 33, Surabaya',
                 'kontak' => '0311234567',
                 'bidang_usaha' => 'Keuangan',
@@ -38,7 +41,9 @@ class TempatMagangSeeder extends Seeder
         foreach ($tempatMagangList as $item) {
             $user = User::create([
                 'name' => $item['name'],
+                'nim' => null,
                 'email' => $item['email'],
+                'no_hp' => $item['no_hp'],
                 'password' => Hash::make('password123'),
                 'role' => 'tempat magang',
             ]);

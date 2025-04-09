@@ -28,14 +28,9 @@ class MahasiswaResource extends Resource
 
     protected static ?int $navigationSort = 1;
 
-    public static function canCreate(): bool
+    public static function canAccess(): bool
     {
-        return in_array(auth()->user()->role, ['super admin']);
-    }
-
-    public static function shouldRegisterNavigation(): bool
-    {
-        return in_array(auth()->user()->role, ['super admin']);
+        return auth()->user()?->role === 'super admin';
     }
 
     public static function form(Form $form): Form

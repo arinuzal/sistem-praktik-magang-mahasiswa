@@ -19,7 +19,7 @@ class PenilaianResource extends Resource
 
     public static function canAccess(): bool
     {
-        return auth()->user()?->role === 'admin';
+        return in_array(auth()->user()?->role, ['admin', 'super admin']);
     }
 
     public static function form(Form $form): Form

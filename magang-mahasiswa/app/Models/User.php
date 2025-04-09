@@ -14,6 +14,7 @@ class User extends Authenticatable
       {
         return $this->hasOne(Mahasiswa::class);
       }
+
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
     use HasRoles;
@@ -24,11 +25,11 @@ class User extends Authenticatable
      */
     protected $fillable = [
        'name',
+       'nim',
        'email',
+       'no_hp',
        'password',
-        'nim',
-        'phone',
-        'role'
+       'role'
     ];
 
     /**

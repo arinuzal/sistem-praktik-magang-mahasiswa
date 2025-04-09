@@ -3,15 +3,19 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Filament\Http\Middleware\Authenticate;
+use Filament\Facades\Filament;
+use App\Providers\Filament\DashboardPanelProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
+
     /**
      * Register any application services.
      */
     public function register(): void
     {
-        //
+       //
     }
 
     /**

@@ -24,7 +24,7 @@ class Mahasiswa extends Model
         'kelompok',
     ];
 
-    public function user()
+      public function user()
       {
          return $this->belongsTo(User::class);
       }
@@ -32,9 +32,10 @@ class Mahasiswa extends Model
       public function tempatMagang()
       {
          return $this->belongsTo(TempatMagang::class);
-       }
-       public function penilaian()
-{
-    return $this->hasOne(Penilaian::class);
-}
+      }
+
+      public function penilaian()
+      {
+          return $this->hasOne(Penilaian::class);
+      }
 }

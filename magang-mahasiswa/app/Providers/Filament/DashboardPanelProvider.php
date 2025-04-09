@@ -7,6 +7,7 @@ use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Filament\Pages;
+use App\Filament\Pages\Dashboard;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
@@ -17,9 +18,7 @@ use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
-use App\Filament\Pages\Dashboard;
-use App\Filament\Pages\Auth\PasswordReset;
-use App\Filament\Pages\Auth\Register;
+use Illuminate\Support\Facades\Route;
 
 class DashboardPanelProvider extends PanelProvider
 {
@@ -28,10 +27,17 @@ class DashboardPanelProvider extends PanelProvider
         return $panel
             ->default()
             ->id('dashboard')
-            ->path('dashboard')
-            ->login()
-            ->registration()
-            ->passwordReset()
+            ->path('admin')
+            ->authGuard('web')
+            ->routes(function () {
+                Route::post('/logout', function (Request $request) {
+                    Auth::guard('web')->logout();
+                    $request->session()->invalidate();
+                    $request->session()->regenerateToken();
+
+                    return redirect('/login');
+                })->name('logout');
+            })
             ->colors([
                 'primary' => Color::Amber,
             ])
@@ -56,6 +62,7 @@ class DashboardPanelProvider extends PanelProvider
                 SubstituteBindings::class,
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
+
             ])
             ->authMiddleware([
                 Authenticate::class,

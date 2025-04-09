@@ -16,30 +16,29 @@ class UsersSeeder extends Seeder
     {
         User::create([
             'name' => 'Budi Mahasiswa',
+            'nim' => '111111',
             'email' => 'mahasiswa@example.com',
+            'no_hp' => '0895392121',
             'password' => Hash::make('password123'),
             'role' => 'mahasiswa',
         ]);
 
         User::create([
             'name' => 'Siti Admin',
+            'nim' => null,
             'email' => 'admin@example.com',
+            'no_hp' => '08953921222',
             'password' => Hash::make('password123'),
             'role' => 'admin',
         ]);
 
         User::create([
             'name' => 'Joko Super Admin',
+            'nim' => null,
             'email' => 'superadmin@example.com',
+            'no_hp' => '08953921223',
             'password' => Hash::make('password123'),
             'role' => 'super admin',
-        ]);
-
-        User::create([
-            'name' => 'Rina Tempat Magang',
-            'email' => 'tempatmagang@example.com',
-            'password' => Hash::make('password123'),
-            'role' => 'tempat magang',
         ]);
     }
 }

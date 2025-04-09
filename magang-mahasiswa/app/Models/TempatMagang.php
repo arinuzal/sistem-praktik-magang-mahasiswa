@@ -17,6 +17,11 @@ class TempatMagang extends Model
         'bidang_usaha',
     ];
 
+    public function mahasiswas()
+    {
+        return $this->hasMany(Mahasiswa::class);
+    }
+
     public function user()
     {
        return $this->belongsTo(User::class);
