@@ -40,5 +40,14 @@ class UsersSeeder extends Seeder
             'password' => Hash::make('password123'),
             'role' => 'super admin',
         ]);
+
+        User::create([
+            'name' => 'Pak Bambang',
+            'nim' => null,
+            'email' => 'arinuzalramadesta@gmail.com',
+            'no_hp' => '08953921223',
+            'password' => Hash::make('password123'),
+            'role' => 'dosen',
+        ]);
     }
 }

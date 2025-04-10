@@ -38,4 +38,9 @@ class Mahasiswa extends Model
       {
           return $this->hasOne(Penilaian::class);
       }
+
+      public function dosen()
+     {
+         return $this->belongsTo(User::class, 'dosen_id');
+     }
 }

@@ -17,6 +17,7 @@ class Penilaian extends Model
         'penyuluhan_perizinan',
         'nilai_penyuluhan',
         'nilai_akhir',
+        'dosen_id'
     ];
 
     public function mahasiswa()

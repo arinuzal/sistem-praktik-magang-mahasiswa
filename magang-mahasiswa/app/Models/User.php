@@ -7,9 +7,15 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
+use App\Notifications\ResetPasswordCustomNotification;
 
 class User extends Authenticatable
 {
+    public function sendPasswordResetNotification($token)
+    {
+    $this->notify(new ResetPasswordCustomNotification($token));
+    }
+
     public function mahasiswa()
       {
         return $this->hasOne(Mahasiswa::class);

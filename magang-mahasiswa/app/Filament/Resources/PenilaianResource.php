@@ -10,6 +10,8 @@ use Filament\Resources\Resource;
 use Filament\Tables\Table;
 use Filament\Tables;
 use Illuminate\Support\Facades\Storage;
+use App\Models\User;
+use Filament\Forms\Components\Select;
 
 class PenilaianResource extends Resource
 {
@@ -52,7 +54,12 @@ class PenilaianResource extends Resource
             Forms\Components\TextInput::make('nilai_akhir')
                 ->disabled()
                 ->dehydrated(false)
-                ->label('Nilai Akhir (otomatis)')
+                ->label('Nilai Akhir (otomatis)'),
+
+                Forms\Components\Select::make('dosen_id')
+                ->label('Dosen Pembimbing')
+                ->options(User::where('role', 'dosen')->pluck('name', 'id'))
+                ->required(),
         ]);
     }
 
