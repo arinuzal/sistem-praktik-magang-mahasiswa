@@ -24,7 +24,7 @@ class UsersSeeder extends Seeder
         ]);
 
         User::create([
-            'name' => 'Siti Admin',
+            'name' => 'Admin',
             'nim' => null,
             'email' => 'admin@example.com',
             'no_hp' => '08953921222',
@@ -33,7 +33,7 @@ class UsersSeeder extends Seeder
         ]);
 
         User::create([
-            'name' => 'Joko Super Admin',
+            'name' => 'Super Admin',
             'nim' => null,
             'email' => 'superadmin@example.com',
             'no_hp' => '08953921223',

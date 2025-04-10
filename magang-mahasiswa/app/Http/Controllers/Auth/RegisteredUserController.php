@@ -48,6 +48,8 @@ class RegisteredUserController extends Controller
 
         event(new Registered($user));
 
+        session()->flash('success', 'Account registered successfully!');
+
         return redirect(route('login', absolute: false));
     }
 }

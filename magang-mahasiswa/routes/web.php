@@ -3,17 +3,20 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\MahasiswaController;
 use App\Http\Controllers\TempatMagangController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\InternshipController;
 use Illuminate\Support\Facades\Route;
 use App\Models\Mahasiswa;
 use Barryvdh\DomPDF\Facade\Pdf;
 
-Route::get('/', function () {
-    return view('welcome');
-});
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/', [HomeController::class, 'home'])->name('home');
+
+Route::prefix('praktik-profesional')->group(function () {
+    Route::get('/', [InternshipController::class, 'index'])->name('internship.index');
+    Route::get('/ganjil', [InternshipController::class, 'odd'])->name('internship.odd');
+    Route::get('/genap', [InternshipController::class, 'even'])->name('internship.even');
+});
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

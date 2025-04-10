@@ -24,6 +24,7 @@ class Mahasiswa extends Model
         'kelompok',
     ];
 
+
       public function user()
       {
          return $this->belongsTo(User::class);
