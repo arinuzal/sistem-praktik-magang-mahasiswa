@@ -13,7 +13,6 @@ use Barryvdh\DomPDF\Facade\Pdf;
 Route::get('/', [HomeController::class, 'home'])->name('home');
 
 Route::prefix('praktik-profesional')->group(function () {
-    Route::get('/', [InternshipController::class, 'index'])->name('internship.index');
     Route::get('/ganjil', [InternshipController::class, 'odd'])->name('internship.odd');
     Route::get('/genap', [InternshipController::class, 'even'])->name('internship.even');
 });

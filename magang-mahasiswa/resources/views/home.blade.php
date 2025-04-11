@@ -11,7 +11,7 @@
             <p class="text-xl md:text-2xl mb-8 max-w-3xl mx-auto">Platform terintegrasi untuk pengelolaan praktik magang
                 mahasiswa secara efisien dan terstruktur</p>
             <div class="flex flex-col md:flex-row justify-center gap-6">
-                <a href="{{ route('internship.index') }}"
+                <a href="{{ route('home') }}#praktik"
                     class="bg-white text-blue-800 px-8 py-4 rounded-lg font-bold text-lg hover:bg-blue-100 transition transform hover:scale-105 shadow-lg">
                     <div class="flex items-center justify-center gap-2">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
@@ -156,7 +156,7 @@
     </section>
 
     <!-- Praktik Profesional Section -->
-    <section id="internship" class="py-16 bg-white">
+    <section id="praktik" class="py-16 bg-white">
         <div class="container mx-auto px-4">
             <div class="text-center mb-12">
                 <h2 class="text-3xl font-bold text-gray-800 mb-4">Praktik Profesional</h2>

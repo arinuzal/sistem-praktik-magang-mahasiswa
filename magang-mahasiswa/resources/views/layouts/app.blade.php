@@ -44,7 +44,7 @@
                         class="nav-link hover:text-blue-200 transition-colors duration-300">
                         <i class="fas fa-file-signature mr-2"></i>Rekomendasi
                     </a>
-                    <a href="{{ route('internship.index') }}"
+                    <a href="{{ route('home') }}#praktik"
                         class="nav-link hover:text-blue-200 transition-colors duration-300">
                         <i class="fas fa-briefcase mr-2"></i>Praktik
                     </a>
@@ -92,7 +92,7 @@
                         class="nav-link hover:bg-blue-700 px-3 py-2 rounded transition">
                         <i class="fas fa-file-signature mr-2"></i>Rekomendasi Mandiri
                     </a>
-                    <a href="{{ route('internship.index') }}"
+                    <a href="{{ route('home') }}#praktik"
                         class="nav-link hover:bg-blue-700 px-3 py-2 rounded transition">
                         <i class="fas fa-briefcase mr-2"></i>Praktik Profesional
                     </a>
@@ -147,7 +147,7 @@
                     <ul class="space-y-2">
                         <li><a href="{{ route('home') }}" class="text-gray-400 hover:text-white transition"><i
                                     class="fas fa-chevron-right mr-2 text-xs"></i>Beranda</a></li>
-                        <li><a href="{{ route('internship.index') }}"
+                        <li><a href="{{ route('home') }}#praktik"
                                 class="text-gray-400 hover:text-white transition"><i
                                     class="fas fa-chevron-right mr-2 text-xs"></i>Praktik Profesional</a></li>
                         <li><a href="{{ route('home') }}#recommendation"
