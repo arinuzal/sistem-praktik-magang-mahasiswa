@@ -48,7 +48,7 @@ class AuthenticatedSessionController extends Controller
             'mahasiswa' => Mahasiswa::where('user_id', $user->id)->exists()
                 ? route('mahasiswa.dashboard')
                 : route('mahasiswa.create'),
-            default => '/',
+            default => '/login',
         });
     }
 

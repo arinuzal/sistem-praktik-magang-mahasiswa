@@ -12,9 +12,6 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @stack('styles')
 
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
     <style>
         .card-hover {
             transition: all 0.3s ease;
@@ -51,7 +48,6 @@
                         <i class="fas fa-sign-out-alt mr-2"></i> Logout
                     </button>
                 </form>
-
             </div>
         </div>
     </header>
@@ -84,7 +80,6 @@
         </div>
         @endif
 
-        <!-- Grid Layout -->
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <!-- Identitas Mahasiswa -->
             <div class="lg:col-span-2 bg-white rounded-xl shadow-md overflow-hidden card-hover">

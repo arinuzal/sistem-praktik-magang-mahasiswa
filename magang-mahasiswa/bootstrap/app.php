@@ -13,6 +13,8 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->alias([
             'check.pendaftaran.mahasiswa' => \App\Http\Middleware\RedirectIfMahasiswaNotRegistered::class,
+            'role.strict' => \App\Http\Middleware\RedirectIfNotOwnRole::class,
+            'mahasiswa.already.registered' => \App\Http\Middleware\RedirectIfAlreadyRegistered::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

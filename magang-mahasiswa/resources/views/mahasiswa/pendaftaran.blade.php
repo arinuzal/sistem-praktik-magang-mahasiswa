@@ -4,22 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pendaftaran Mahasiswa</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#1e40af',
-                        secondary: '#1e3a8a',
-                        dark: '#0f172a',
-                        light: '#f8fafc'
-                    }
-                }
-            }
-        }
-    </script>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="bg-gray-100 text-gray-900 min-h-screen">
     <div class="max-w-4xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
@@ -28,7 +13,9 @@
             <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-6 rounded-lg shadow">
                 <div class="flex">
                     <div class="flex-shrink-0">
-                        <i class="fas fa-exclamation-circle h-5 w-5 text-red-500"></i>
+                        <svg class="h-5 w-5 text-red-500" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                        </svg>
                     </div>
                     <div class="ml-3">
                         <h3 class="text-sm font-medium text-red-800">Ada {{ $errors->count() }} kesalahan dalam pengisian form</h3>
@@ -49,7 +36,9 @@
             <div class="bg-green-50 border-l-4 border-green-500 p-4 mb-6 rounded-lg shadow">
                 <div class="flex">
                     <div class="flex-shrink-0">
-                        <i class="fas fa-check-circle h-5 w-5 text-green-500"></i>
+                        <svg class="h-5 w-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                        </svg>
                     </div>
                     <div class="ml-3">
                         <p class="text-sm font-medium text-green-800">{{ session('success') }}</p>
@@ -60,9 +49,11 @@
 
         <div class="bg-white shadow-xl rounded-lg overflow-hidden">
             <!-- Header Form -->
-            <div class="bg-gradient-to-r from-primary to-secondary px-6 py-4">
+            <div class="bg-gradient-to-r from-blue-800 to-blue-900 px-6 py-4">
                 <h2 class="text-2xl font-bold text-white flex items-center">
-                    <i class="fas fa-user-graduate mr-3"></i>
+                    <svg class="h-6 w-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                    </svg>
                     Pendaftaran Mahasiswa
                 </h2>
                 <p class="text-blue-100 mt-1 text-sm">Silakan isi form berikut dengan data yang valid</p>
@@ -88,7 +79,9 @@
                         </label>
                         <div class="relative">
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <i class="fas fa-user text-gray-400"></i>
+                                <svg class="h-5 w-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
+                                </svg>
                             </div>
                             <input type="text" name="nama" id="nama" value="{{ old('nama') }}"
                                 class="pl-10 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
@@ -103,7 +96,10 @@
                         </label>
                         <div class="relative">
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <i class="fas fa-id-card text-gray-400"></i>
+                                <svg class="h-5 w-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M10 2a1 1 0 00-1 1v1a1 1 0 002 0V3a1 1 0 00-1-1z" />
+                                    <path fill-rule="evenodd" d="M4 4a3 3 0 013-3h6a3 3 0 013 3v2a3 3 0 01-3 3h-1v1h3a1 1 0 110 2h-3v1h3a1 1 0 110 2h-3v1a1 1 0 11-2 0v-1H8a1 1 0 110-2h3v-1H8a1 1 0 110-2h3V9H7a3 3 0 01-3-3V4z" clip-rule="evenodd" />
+                                </svg>
                             </div>
                             <input type="text" name="nim" id="nim" value="{{ old('nim') }}"
                                 class="pl-10 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
@@ -125,7 +121,9 @@
                                 <option value="genap" {{ old('semester') == 'genap' ? 'selected' : '' }}>Genap</option>
                             </select>
                             <div class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-                                <i class="fas fa-chevron-down text-gray-400"></i>
+                                <svg class="h-5 w-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                </svg>
                             </div>
                         </div>
                     </div>
@@ -187,8 +185,10 @@
                     <!-- Tombol Submit -->
                     <div class="pt-4">
                         <button type="submit" id="submitBtn"
-                            class="w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gradient-to-r from-primary to-secondary hover:from-blue-800 hover:to-blue-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-150 ease-in-out">
-                            <i class="fas fa-paper-plane mr-2"></i>
+                            class="w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gradient-to-r from-blue-800 to-blue-900 hover:from-blue-700 hover:to-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-150 ease-in-out">
+                            <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+                            </svg>
                             Daftar Sekarang
                         </button>
                     </div>

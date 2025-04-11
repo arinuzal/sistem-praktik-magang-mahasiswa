@@ -21,7 +21,7 @@
                         <svg class="w-3 h-3 text-gray-400 mx-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
                         </svg>
-                        <a href="{{ route('internship.index') }}" class="ml-1 text-sm font-medium text-blue-600 hover:text-blue-800 md:ml-2">Praktik Profesional</a>
+                        <a href="{{ route('home') }}" class="ml-1 text-sm font-medium text-blue-600 hover:text-blue-800 md:ml-2">Praktik Profesional</a>
                     </div>
                 </li>
                 <li aria-current="page">

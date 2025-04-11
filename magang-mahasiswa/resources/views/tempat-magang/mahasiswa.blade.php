@@ -4,35 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Daftar Mahasiswa Magang - {{ $tempatMagang->nama_instansi }}</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        primary: {
-                            600: '#2563eb',
-                            700: '#1d4ed8'
-                        },
-                        success: {
-                            600: '#16a34a',
-                            700: '#15803d'
-                        },
-                        warning: {
-                            600: '#d97706',
-                            700: '#b45309'
-                        },
-                        danger: {
-                            600: '#dc2626',
-                            700: '#b91c1c'
-                        }
-                    }
-                }
-            }
+
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+    <style>
+        .dark {
+            --color-primary-600: #2563eb;
+            --color-primary-700: #1d4ed8;
+            --color-success-600: #16a34a;
+            --color-success-700: #15803d;
+            --color-warning-600: #d97706;
+            --color-warning-700: #b45309;
+            --color-danger-600: #dc2626;
+            --color-danger-700: #b91c1c;
         }
-    </script>
+    </style>
 </head>
 <body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200 transition-colors duration-200">
 <!-- Navigation Bar -->
@@ -81,7 +67,7 @@
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
         <div>
             <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
-                Mahasiswa Magang di <span class="text-primary-600">{{ $tempatMagang->nama_instansi }}</span>
+                Mahasiswa Magang di <span class="text-primary-600 dark:text-primary-500">{{ $tempatMagang->nama_instansi }}</span>
             </h1>
             <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
                 Total: {{ $mahasiswas->total() }} mahasiswa
@@ -89,15 +75,15 @@
         </div>
 
         <a href="{{ route('mahasiswa.export.pdf', ['status' => request('status'), 'search' => request('search')]) }}"
-           class="inline-flex items-center px-4 py-2 bg-success-600 text-white rounded-md hover:bg-success-700 transition-colors">
+           class="inline-flex items-center px-4 py-2 bg-success-600 dark:bg-success-700 text-white rounded-md hover:bg-success-700 dark:hover:bg-success-800 transition-colors">
             <i class="fas fa-file-pdf mr-2"></i> Export PDF
         </a>
     </div>
 
     <!-- Notification -->
     @if(session('error'))
-        <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6 rounded-md flex items-start">
-            <i class="fas fa-exclamation-circle text-red-500 mr-3 mt-1"></i>
+        <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6 rounded-md flex items-start dark:bg-red-900 dark:border-red-700 dark:text-red-100">
+            <i class="fas fa-exclamation-circle text-red-500 dark:text-red-300 mr-3 mt-1"></i>
             <div>
                 <p class="font-medium">{{ session('error') }}</p>
             </div>
@@ -131,7 +117,7 @@
                             class="pl-10 w-full border border-gray-300 dark:border-gray-600 rounded-md px-3 py-2 bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-500">
                     </div>
                     <button type="submit"
-                        class="bg-primary-600 text-white px-4 py-2 rounded-md hover:bg-primary-700 transition-colors flex items-center justify-center">
+                        class="bg-primary-600 dark:bg-primary-700 text-white px-4 py-2 rounded-md hover:bg-primary-700 dark:hover:bg-primary-800 transition-colors flex items-center justify-center">
                         <i class="fas fa-filter mr-2"></i> Filter
                     </button>
                 </div>
@@ -220,8 +206,5 @@
         </div>
     @endif
 </div>
-
-<!-- Alpine JS for dropdown functionality -->
-<script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
 </body>
 </html>

@@ -14,8 +14,6 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @stack('styles')
 
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 
 <body class="bg-gray-50 font-sans antialiased">
@@ -54,25 +52,17 @@
                     </a>
                 </nav>
 
-                <!-- Auth Buttons -->
                 <div class="flex items-center space-x-4">
-                    @auth
-                        <a href="{{ route('mahasiswa.dashboard') }}"
-                            class="bg-white text-blue-800 px-4 py-2 rounded-md font-medium hover:bg-gray-100 transition flex items-center">
-                            <i class="fas fa-tachometer-alt mr-2"></i>Dashboard
-                        </a>
-                    @else
-                        <a href="{{ route('login') }}"
-                            class="bg-white text-blue-800 px-4 py-2 rounded-md font-medium hover:bg-gray-100 transition flex items-center">
-                            <i class="fas fa-sign-in-alt mr-2"></i>Login
-                        </a>
-                        @if (Route::has('register'))
-                            <a href="{{ route('register') }}"
-                                class="bg-blue-600 text-white px-4 py-2 rounded-md font-medium hover:bg-blue-700 transition flex items-center">
-                                <i class="fas fa-user-plus mr-2"></i>Daftar
-                            </a>
-                        @endif
-                    @endauth
+                    <a href="{{ route('login') }}"
+                        class="bg-white text-blue-800 px-4 py-2 rounded-md font-medium hover:bg-gray-100 transition flex items-center">
+                        <i class="fas fa-sign-in-alt mr-2"></i>Login
+                    </a>
+
+                    <a href="{{ route('register') }}"
+                        class="bg-blue-600 text-white px-4 py-2 rounded-md font-medium hover:bg-blue-700 transition flex items-center">
+                        <i class="fas fa-user-plus mr-2"></i>Daftar
+                    </a>
+
 
                     <!-- Mobile Menu Button -->
                     <button id="mobile-menu-button" class="md:hidden text-white focus:outline-none">
@@ -84,8 +74,7 @@
             <!-- Mobile Menu -->
             <div id="mobile-menu" class="md:hidden hidden mt-4 pb-4">
                 <div class="flex flex-col space-y-3">
-                    <a href="{{ route('home') }}#about"
-                        class="nav-link hover:bg-blue-700 px-3 py-2 rounded transition">
+                    <a href="{{ route('home') }}#about" class="nav-link hover:bg-blue-700 px-3 py-2 rounded transition">
                         <i class="fas fa-info-circle mr-2"></i>Tentang Praktik
                     </a>
                     <a href="{{ route('home') }}#recommendation"
@@ -101,23 +90,16 @@
                         <i class="fas fa-envelope mr-2"></i>Kontak Kami
                     </a>
 
-                    @auth
-                        <a href="{{ route('mahasiswa.dashboard') }}"
-                            class="bg-white text-blue-800 px-3 py-2 rounded-md font-medium hover:bg-gray-100 transition flex items-center justify-center">
-                            <i class="fas fa-tachometer-alt mr-2"></i>Dashboard
-                        </a>
-                    @else
-                        <a href="{{ route('login') }}"
-                            class="bg-white text-blue-800 px-3 py-2 rounded-md font-medium hover:bg-gray-100 transition flex items-center justify-center">
-                            <i class="fas fa-sign-in-alt mr-2"></i>Login
-                        </a>
-                        @if (Route::has('register'))
-                            <a href="{{ route('register') }}"
-                                class="bg-blue-600 text-white px-3 py-2 rounded-md font-medium hover:bg-blue-700 transition flex items-center justify-center">
-                                <i class="fas fa-user-plus mr-2"></i>Daftar
-                            </a>
-                        @endif
-                    @endauth
+                    <a href="{{ route('login') }}"
+                        class="bg-white text-blue-800 px-3 py-2 rounded-md font-medium hover:bg-gray-100 transition flex items-center justify-center">
+                        <i class="fas fa-sign-in-alt mr-2"></i>Login
+                    </a>
+
+                    <a href="{{ route('register') }}"
+                        class="bg-blue-600 text-white px-3 py-2 rounded-md font-medium hover:bg-blue-700 transition flex items-center justify-center">
+                        <i class="fas fa-user-plus mr-2"></i>Daftar
+                    </a>
+
                 </div>
             </div>
         </div>
@@ -147,8 +129,7 @@
                     <ul class="space-y-2">
                         <li><a href="{{ route('home') }}" class="text-gray-400 hover:text-white transition"><i
                                     class="fas fa-chevron-right mr-2 text-xs"></i>Beranda</a></li>
-                        <li><a href="{{ route('home') }}#praktik"
-                                class="text-gray-400 hover:text-white transition"><i
+                        <li><a href="{{ route('home') }}#praktik" class="text-gray-400 hover:text-white transition"><i
                                     class="fas fa-chevron-right mr-2 text-xs"></i>Praktik Profesional</a></li>
                         <li><a href="{{ route('home') }}#recommendation"
                                 class="text-gray-400 hover:text-white transition"><i
