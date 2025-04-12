@@ -9,15 +9,16 @@ use Illuminate\Support\Facades\Route;
 use App\Models\Mahasiswa;
 use Barryvdh\DomPDF\Facade\Pdf;
 
+
+
 Route::get('/', [HomeController::class, 'home'])->name('home');
 
-// Umum - Praktik Profesional
 Route::prefix('praktik-profesional')->group(function () {
     Route::get('/ganjil', [InternshipController::class, 'odd'])->name('internship.odd');
     Route::get('/genap', [InternshipController::class, 'even'])->name('internship.even');
 });
 
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth', 'role.strict'])->group(function () {
     Route::get('/dashboard', function () {
         return view('home');
     })->name('dashboard');
