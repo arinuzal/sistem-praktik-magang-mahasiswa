@@ -14,7 +14,7 @@
          <!-- Nim -->
        <div class="mt-4">
            <x-input-label for="nim" value="NIM" />
-           <x-text-input id="nim" class="block mt-1 w-full" type="number" name="nim" required />
+           <x-text-input id="nim" class="block mt-1 w-full" type="text" name="nim" required />
            <x-input-error :messages="$errors->get('nim')" class="mt-2" />
        </div>
 

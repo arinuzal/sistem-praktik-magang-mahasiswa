@@ -300,32 +300,6 @@
         </div>
     </section>
 
-    <!-- Testimoni -->
-    <section class="py-16 bg-white">
-        <div class="container mx-auto px-4">
-            <h2 class="text-3xl font-bold text-center mb-12 text-gray-800">Apa Kata Mereka?</h2>
-            <div class="grid md:grid-cols-3 gap-8">
-                @foreach ([['Sangat membantu proses administrasi praktik', 'Mahasiswa Teknik Informatika 2025', 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z'], ['Sistem yang sangat efisien dan mudah digunakan', 'Dosen Pembimbing', 'M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z'], ['Proses penilaian menjadi lebih transparan', 'Koordinator Praktik', 'M13 10V3L4 14h7v7l9-11h-7z']] as $testimonial)
-                    <div class="bg-gray-50 p-6 rounded-xl">
-                        <div class="flex items-center mb-4">
-                            <div class="bg-blue-100 p-2 rounded-full mr-4">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-700" fill="none"
-                                    viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="{{ $testimonial[2] }}" />
-                                </svg>
-                            </div>
-                            <div>
-                                <p class="font-medium text-gray-800">{{ $testimonial[0] }}</p>
-                                <p class="text-sm text-gray-600">{{ $testimonial[1] }}</p>
-                            </div>
-                        </div>
-                    </div>
-                @endforeach
-            </div>
-        </div>
-    </section>
-
     <!-- Statistik -->
     <section class="py-16 bg-blue-700 text-white">
         <div class="container mx-auto px-4">
@@ -478,18 +452,6 @@
                         </div>
                     </form>
                 </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Peta Lokasi -->
-    <section class="bg-white pb-16">
-        <div class="container mx-auto px-4">
-            <div class="rounded-xl overflow-hidden shadow-lg">
-                <iframe
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3960.8003505037466!2d107.61844631529494!3d-6.902895669411785!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e68e64a1e6a1093%3A0x1e2a7f3b0f6a3f1d!2sUniversitas%20Anda!5e0!3m2!1sen!2sid!4v1621234567890!5m2!1sen!2sid"
-                    width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy"
-                    class="filter grayscale(20%) contrast(110%)"></iframe>
             </div>
         </div>
     </section>

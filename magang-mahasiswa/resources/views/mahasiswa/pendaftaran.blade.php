@@ -198,7 +198,30 @@
     </div>
 
     <script>
-        // Fungsi untuk menangani pemilihan semester dan menampilkan mata kuliah
+        // Data mata kuliah dan kelas untuk semester genap
+        const mataKuliahGenap = [
+            {
+                nama: 'Teknik Pengurusan Perizinan',
+                kelas: ['A']
+            },
+            {
+                nama: 'Teknik Pembuatan Perundang-Undangan',
+                kelas: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L']
+            },
+            {
+                nama: 'Teknik Pembuatan Kontrak',
+                kelas: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I']
+            },
+            {
+                nama: 'Penanganan Perkara Konstitusi',
+                kelas: ['A']
+            },
+            {
+                nama: 'Arbitrase dan Alternatif Penyelesaian Sengketa',
+                kelas: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I']
+            }
+        ];
+
         function handleSemesterChange() {
             const semesterSelect = document.getElementById('semester');
             const container = document.getElementById('mataKuliahContainer');
@@ -211,62 +234,134 @@
                 return;
             }
 
-            let mataKuliah = [];
-
             if (semesterSelect.value === 'gasal') {
-                mataKuliah = ['PP Agama', 'PP Konstitusi', 'PP Perdata', 'PP Pidana', 'PP TUN'];
+                const mataKuliahGasal = ['PP Agama', 'PP Konstitusi', 'PP Perdata', 'PP Pidana', 'PP TUN'];
                 courseInstruction.textContent = "Pilih mata kuliah untuk semester Gasal:";
-            } else if (semesterSelect.value === 'genap') {
-                mataKuliah = ['TPK', 'TPUU', 'Arbitrase dan APS', 'Teknik Pengurusan Perizinan'];
-                courseInstruction.textContent = "Pilih mata kuliah untuk semester Genap:";
-            }
 
-            mataKuliah.forEach((matkul, index) => {
-                const div = document.createElement('div');
-                div.className = 'flex items-center p-2 hover:bg-blue-50 rounded-lg transition bg-white';
+                mataKuliahGasal.forEach((matkul, index) => {
+                    const div = document.createElement('div');
+                    div.className = 'flex items-center p-2 hover:bg-blue-50 rounded-lg transition bg-white';
 
-                const checkboxId = `matkul-${index}`;
+                    const checkboxId = `matkul-${index}`;
 
-                const label = document.createElement('label');
-                label.className = 'flex items-center space-x-3 cursor-pointer w-full';
-                label.htmlFor = checkboxId;
+                    const label = document.createElement('label');
+                    label.className = 'flex items-center space-x-3 cursor-pointer w-full';
+                    label.htmlFor = checkboxId;
 
-                const checkbox = document.createElement('input');
-                checkbox.type = 'checkbox';
-                checkbox.name = 'mata_kuliah[]';
-                checkbox.id = checkboxId;
-                checkbox.value = matkul;
-                checkbox.className = 'h-5 w-5 text-blue-600 rounded border-gray-300 focus:ring-blue-500';
+                    const checkbox = document.createElement('input');
+                    checkbox.type = 'checkbox';
+                    checkbox.name = 'mata_kuliah[]';
+                    checkbox.id = checkboxId;
+                    checkbox.value = matkul;
+                    checkbox.className = 'h-5 w-5 text-blue-600 rounded border-gray-300 focus:ring-blue-500';
 
-                // Cek jika mata kuliah ini sudah dipilih sebelumnya (setelah validasi error)
-                if (Array.isArray(@json(old('mata_kuliah')))) {
-                    if (@json(old('mata_kuliah')).includes(matkul)) {
-                        checkbox.checked = true;
+                    if (Array.isArray(@json(old('mata_kuliah')))) {
+                        if (@json(old('mata_kuliah')).includes(matkul)) {
+                            checkbox.checked = true;
+                        }
                     }
-                }
 
-                const span = document.createElement('span');
-                span.className = 'text-sm text-gray-700';
-                span.textContent = matkul;
+                    const span = document.createElement('span');
+                    span.className = 'text-sm text-gray-700';
+                    span.textContent = matkul;
 
-                label.appendChild(checkbox);
-                label.appendChild(span);
-                div.appendChild(label);
-                container.appendChild(div);
-            });
+                    label.appendChild(checkbox);
+                    label.appendChild(span);
+                    div.appendChild(label);
+                    container.appendChild(div);
+                });
+            } else if (semesterSelect.value === 'genap') {
+                courseInstruction.textContent = "Pilih mata kuliah dan kelas untuk semester Genap:";
+
+                mataKuliahGenap.forEach((matkul, index) => {
+                    const div = document.createElement('div');
+                    div.className = 'p-3 hover:bg-blue-50 rounded-lg transition bg-white border border-gray-200';
+
+                    const matkulDiv = document.createElement('div');
+                    matkulDiv.className = 'flex items-center mb-2';
+
+                    const checkboxId = `matkul-${index}`;
+
+                    const label = document.createElement('label');
+                    label.className = 'flex items-center space-x-3 cursor-pointer w-full';
+                    label.htmlFor = checkboxId;
+
+                    const checkbox = document.createElement('input');
+                    checkbox.type = 'checkbox';
+                    checkbox.name = 'mata_kuliah[]';
+                    checkbox.id = checkboxId;
+                    checkbox.value = matkul.nama;
+                    checkbox.className = 'h-5 w-5 text-blue-600 rounded border-gray-300 focus:ring-blue-500 matkul-checkbox';
+                    checkbox.dataset.matkulIndex = index;
+
+                    if (Array.isArray(@json(old('mata_kuliah')))) {
+                        if (@json(old('mata_kuliah')).includes(matkul.nama)) {
+                            checkbox.checked = true;
+                        }
+                    }
+
+                    const span = document.createElement('span');
+                    span.className = 'text-sm font-medium text-gray-700';
+                    span.textContent = matkul.nama;
+
+                    label.appendChild(checkbox);
+                    label.appendChild(span);
+                    matkulDiv.appendChild(label);
+                    div.appendChild(matkulDiv);
+
+                    const kelasDiv = document.createElement('div');
+                    kelasDiv.id = `kelas-container-${index}`;
+                    kelasDiv.className = 'ml-7 mt-2 hidden';
+
+                    const kelasLabel = document.createElement('label');
+                    kelasLabel.className = 'block text-sm text-gray-700 mb-1';
+                    kelasLabel.textContent = 'Pilih Kelas:';
+
+                    const kelasSelect = document.createElement('select');
+                    kelasSelect.name = `kelas_${matkul.nama.replace(/\s+/g, '_')}`;
+                    kelasSelect.className = 'block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm';
+                    kelasSelect.dataset.matkulIndex = index;
+
+                    matkul.kelas.forEach(kelas => {
+                        const option = document.createElement('option');
+                        option.value = kelas;
+                        option.textContent = kelas;
+                        kelasSelect.appendChild(option);
+                    });
+
+
+
+                    kelasDiv.appendChild(kelasLabel);
+                    kelasDiv.appendChild(kelasSelect);
+                    div.appendChild(kelasDiv);
+
+                    checkbox.addEventListener('change', function() {
+                        const kelasContainer = document.getElementById(`kelas-container-${index}`);
+                        if (this.checked) {
+                            kelasContainer.classList.remove('hidden');
+                        } else {
+                            kelasContainer.classList.add('hidden');
+                        }
+                    });
+
+                    if (checkbox.checked) {
+                        const kelasContainer = document.getElementById(`kelas-container-${index}`);
+                        kelasContainer.classList.remove('hidden');
+                    }
+
+                    container.appendChild(div);
+                });
+            }
         }
 
-        // Inisialisasi saat dokumen siap
         document.addEventListener('DOMContentLoaded', function() {
-            // Event listener untuk perubahan semester
             document.getElementById('semester').addEventListener('change', handleSemesterChange);
 
-            // Jika ada nilai semester yang sudah dipilih (setelah validasi error), tampilkan mata kuliahnya
+
             if (@json(old('semester'))) {
                 handleSemesterChange();
             }
 
-            // Preview untuk upload file
             document.getElementById('bukti_pembayaran').addEventListener('change', function(e) {
                 const file = e.target.files[0];
                 const preview = document.getElementById('paymentPreview');
@@ -295,7 +390,6 @@
                 }
             });
 
-            // Validasi form sebelum submit
             document.getElementById('registrationForm').addEventListener('submit', function(e) {
                 const semester = document.getElementById('semester').value;
                 const checkboxes = document.querySelectorAll('input[name="mata_kuliah[]"]:checked');
@@ -310,6 +404,26 @@
                     });
                 } else {
                     courseError.classList.add('hidden');
+                }
+
+                if (semester === 'genap') {
+                    let isValid = true;
+
+                    checkboxes.forEach(checkbox => {
+                        const matkulIndex = checkbox.dataset.matkulIndex;
+                        const kelasSelect = document.querySelector(`select[data-matkul-index="${matkulIndex}"]`);
+
+                        if (kelasSelect && !kelasSelect.value) {
+                            isValid = false;
+                            // Tambahkan class error ke select
+                            kelasSelect.classList.add('border-red-500');
+                        }
+                    });
+
+                    if (!isValid) {
+                        e.preventDefault();
+                        alert('Harap pilih kelas untuk semua mata kuliah yang dipilih');
+                    }
                 }
             });
         });

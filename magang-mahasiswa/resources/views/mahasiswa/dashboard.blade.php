@@ -95,6 +95,12 @@
                             <p class="text-sm text-gray-500">Nama Lengkap</p>
                             <p class="font-medium text-gray-800">{{ $mahasiswa->nama }}</p>
                         </div>
+                        @if($mahasiswa->is_luar_biasa === 1)
+                        <div>
+                            <p class="text-sm text-gray-500">Mahasiswa</p>
+                            <p class="font-medium text-gray-800">Luar Biasa</p>
+                        </div>
+                        @endif
                         <div>
                             <p class="text-sm text-gray-500">NIM</p>
                             <p class="font-medium text-gray-800">{{ $mahasiswa->nim }}</p>
@@ -117,10 +123,13 @@
                     <div class="mt-6">
                         <h3 class="text-lg font-medium text-gray-800 mb-2">Mata Kuliah</h3>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                            @foreach (json_decode($mahasiswa->mata_kuliah) as $mk)
-                            <span class="bg-gray-100 text-gray-800 rounded-full px-3 py-1 text-sm">
-                                {{ $mk }}
-                            </span>
+                            @foreach (json_decode($mahasiswa->mata_kuliah, true) as $mk)
+                                <span class="bg-gray-100 text-gray-800 rounded-full px-3 py-1 text-sm">
+                                    {{ $mk['nama'] }}
+                                    @if(!empty($mk['kelas']))
+                                        - Kelas {{ $mk['kelas'] }}
+                                    @endif
+                                </span>
                             @endforeach
                         </div>
                     </div>

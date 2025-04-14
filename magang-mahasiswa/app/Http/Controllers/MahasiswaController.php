@@ -33,12 +33,41 @@ class MahasiswaController extends Controller
         $buktiPembayaran = $request->file('bukti_pembayaran')->store('bukti_pembayaran', 'public');
         $buktiKrs = $request->file('bukti_krs')->store('bukti_krs', 'public');
 
+        $mataKuliahData = [];
+
+        if ($request->semester === 'genap') {
+            foreach ($request->mata_kuliah as $matkul) {
+                $kelasField = 'kelas_' . str_replace(' ', '_', $matkul);
+
+                if ($request->has($kelasField)) {
+                    $mataKuliahData[] = [
+                        'nama' => $matkul,
+                        'kelas' => $request->input($kelasField)
+                    ];
+                } else {
+                    $mataKuliahData[] = [
+                        'nama' => $matkul,
+                        'kelas' => null
+                    ];
+                }
+            }
+        } else {
+            foreach ($request->mata_kuliah as $matkul) {
+                $mataKuliahData[] = [
+                    'nama' => $matkul,
+                    'kelas' => null
+                ];
+            }
+        }
+
+        $mataKuliahJson = json_encode($mataKuliahData);
+
         $mahasiswa = Mahasiswa::create([
             'user_id' => auth()->id(),
             'nama' => auth()->user()->name,
             'nim' => $request->nim,
             'semester' => $request->semester,
-            'mata_kuliah' => json_encode($request->mata_kuliah),
+            'mata_kuliah' => $mataKuliahJson,
             'bukti_pembayaran' => $buktiPembayaran,
             'bukti_krs' => $buktiKrs,
             'link_artikel' => $request->link_artikel,
@@ -67,7 +96,6 @@ class MahasiswaController extends Controller
 
         return redirect()->route('mahasiswa.dashboard')->with('success', 'Pendaftaran berhasil.');
     }
-
 
     public function dashboard()
     {
