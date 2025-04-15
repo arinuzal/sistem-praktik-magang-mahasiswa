@@ -19,7 +19,7 @@ class TempatMagang extends Model
 
     public function mahasiswas()
     {
-        return $this->hasMany(Mahasiswa::class);
+        return $this->hasMany(Mahasiswa::class)->cascadeOnDelete();
     }
 
     public function user()

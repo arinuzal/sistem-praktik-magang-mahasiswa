@@ -123,9 +123,13 @@
                     <div class="mt-6">
                         <h3 class="text-lg font-medium text-gray-800 mb-2">Mata Kuliah</h3>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                            @foreach (json_decode($mahasiswa->mata_kuliah, true) as $mk)
+                            @php
+                                $mataKuliah = json_decode($mahasiswa->mata_kuliah, true) ?? [];
+                            @endphp
+
+                            @foreach($mataKuliah as $mk)
                                 <span class="bg-gray-100 text-gray-800 rounded-full px-3 py-1 text-sm">
-                                    {{ $mk['nama'] }}
+                                    {{ $mk['nama'] ?? '-' }}
                                     @if(!empty($mk['kelas']))
                                         - Kelas {{ $mk['kelas'] }}
                                     @endif
@@ -159,6 +163,7 @@
             </div>
 
             <!-- Informasi Magang -->
+            @if(!$mahasiswa->is_luar_biasa)
             <div class="bg-white rounded-xl shadow-md overflow-hidden card-hover">
                 <div class="bg-gradient-to-r from-blue-50 to-blue-100 px-6 py-4 border-b border-gray-200">
                     <h2 class="text-xl font-semibold text-gray-800 flex items-center">
@@ -213,6 +218,7 @@
                     </div>
                 </div>
             </div>
+            @endif
 
             <!-- Semester Gasal Section -->
             @if($mahasiswa->semester === 'gasal')

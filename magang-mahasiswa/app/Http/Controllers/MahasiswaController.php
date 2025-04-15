@@ -33,23 +33,27 @@ class MahasiswaController extends Controller
         $buktiPembayaran = $request->file('bukti_pembayaran')->store('bukti_pembayaran', 'public');
         $buktiKrs = $request->file('bukti_krs')->store('bukti_krs', 'public');
 
+        // Format mata kuliah
         $mataKuliahData = [];
 
         if ($request->semester === 'genap') {
             foreach ($request->mata_kuliah as $matkul) {
                 $kelasField = 'kelas_' . str_replace(' ', '_', $matkul);
 
-                if ($request->has($kelasField)) {
-                    $mataKuliahData[] = [
-                        'nama' => $matkul,
-                        'kelas' => $request->input($kelasField)
-                    ];
-                } else {
-                    $mataKuliahData[] = [
-                        'nama' => $matkul,
-                        'kelas' => null
-                    ];
-                }
+                // Normalisasi nama mata kuliah
+                $namaMatkul = match($matkul) {
+                    'teknik_pengurusan_perizinan' => 'Teknik Pengurusan Perizinan',
+                    'teknik_pembuatan_perundangan' => 'Teknik Pembuatan Perundang-Undangan',
+                    'teknik_pembuatan_kontrak' => 'Teknik Pembuatan Kontrak',
+                    'penanganan_perkara_konstitusi' => 'Penanganan Perkara Konstitusi',
+                    'arbitrase' => 'Arbitrase dan Alternatif Penyelesaian Sengketa',
+                    default => $matkul
+                };
+
+                $mataKuliahData[] = [
+                    'nama' => $namaMatkul,
+                    'kelas' => $request->input($kelasField)
+                ];
             }
         } else {
             foreach ($request->mata_kuliah as $matkul) {
@@ -60,7 +64,8 @@ class MahasiswaController extends Controller
             }
         }
 
-        $mataKuliahJson = json_encode($mataKuliahData);
+        // Encode dengan format yang konsisten
+        $mataKuliahJson = json_encode($mataKuliahData, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
 
         $mahasiswa = Mahasiswa::create([
             'user_id' => auth()->id(),

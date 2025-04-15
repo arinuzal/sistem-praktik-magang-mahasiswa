@@ -415,7 +415,6 @@
 
                         if (kelasSelect && !kelasSelect.value) {
                             isValid = false;
-                            // Tambahkan class error ke select
                             kelasSelect.classList.add('border-red-500');
                         }
                     });

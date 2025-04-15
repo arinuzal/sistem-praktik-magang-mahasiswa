@@ -72,6 +72,7 @@ class UserResource extends Resource
                     'admin' => 'Admin',
                     'tempat magang' => 'Tempat Magang',
                     'mahasiswa' => 'Mahasiswa',
+                    'dosen' => 'Dosen'
                 ])
                 ->required(),
         ]);
@@ -93,7 +94,8 @@ class UserResource extends Resource
                 'super admin' => 'Super Admin',
                 'admin' => 'Admin',
                 'tempat magang' => 'Tempat Magang',
-                'mahasiswa' => 'Mahasiswa'
+                'mahasiswa' => 'Mahasiswa',
+                'dosen' => 'Dosen'
         ]),
             ])
             ->actions([
