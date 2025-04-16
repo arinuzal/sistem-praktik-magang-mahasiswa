@@ -15,6 +15,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'check.pendaftaran.mahasiswa' => \App\Http\Middleware\RedirectIfMahasiswaNotRegistered::class,
             'role.strict' => \App\Http\Middleware\RedirectIfNotOwnRole::class,
             'mahasiswa.already.registered' => \App\Http\Middleware\RedirectIfAlreadyRegistered::class,
+            'prevent.back.history' => \App\Http\Middleware\PreventBackHistory::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

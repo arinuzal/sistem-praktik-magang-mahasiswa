@@ -3,26 +3,14 @@
     $data = [];
 
     if (is_array($mataKuliah)) {
-        if (isset($mataKuliah[0]) && is_array($mataKuliah[0])) {
-            $data = $mataKuliah;
-        } else {
-            foreach ($mataKuliah as $item) {
-                if (is_string($item)) {
-                    $parts = explode('_', $item);
-                    $kelas = array_pop($parts);
-                    $nama = str_replace('_', ' ', implode('_', $parts));
-                    $data[] = ['nama' => $nama, 'kelas' => $kelas];
-                }
-            }
-        }
-    } elseif (is_string($mataKuliah)) {
+        $data = $mataKuliah;
+    } elseif (is_string($mataKuliah) && !empty($mataKuliah)) {
         try {
             $decoded = json_decode($mataKuliah, true);
-            if (is_array($decoded)) {
+            if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
                 $data = $decoded;
             }
         } catch (\Exception $e) {
-            $data = [];
         }
     }
 @endphp

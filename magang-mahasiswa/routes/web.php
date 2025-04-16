@@ -31,7 +31,7 @@ Route::middleware('auth')->group(function () {
 });
 
 // MAHASISWA
-Route::middleware(['auth', 'role.strict:mahasiswa'])->group(function () {
+Route::middleware(['auth', 'role.strict:mahasiswa', 'prevent.back.history'])->group(function () {
     Route::middleware(['mahasiswa.already.registered'])->group(function () {
         Route::get('/pendaftaran-mahasiswa', [MahasiswaController::class, 'create'])->name('mahasiswa.create');
         Route::post('/pendaftaran-mahasiswa', [MahasiswaController::class, 'store'])->name('mahasiswa.store');
@@ -49,7 +49,7 @@ Route::middleware(['auth', 'role.strict:mahasiswa'])->group(function () {
 });
 
 // TEMPAT MAGANG
-Route::middleware(['auth', 'role.strict:tempat magang'])->group(function () {
+Route::middleware(['auth', 'role.strict:tempat magang', 'prevent.back.history'])->group(function () {
     Route::get('/tempat-magang/mahasiswa', [TempatMagangController::class, 'mahasiswaMagang'])->name('tempatMagang.mahasiswa');
     Route::get('/tempat-magang/mahasiswa/export', [TempatMagangController::class, 'exportPdf'])->name('mahasiswa.export.pdf');
 });

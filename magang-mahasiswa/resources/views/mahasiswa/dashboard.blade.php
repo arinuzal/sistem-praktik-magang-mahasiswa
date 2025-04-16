@@ -123,18 +123,16 @@
                     <div class="mt-6">
                         <h3 class="text-lg font-medium text-gray-800 mb-2">Mata Kuliah</h3>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                            @php
-                                $mataKuliah = json_decode($mahasiswa->mata_kuliah, true) ?? [];
-                            @endphp
-
-                            @foreach($mataKuliah as $mk)
+                            @forelse($mahasiswa->mata_kuliah_formatted as $mk)
                                 <span class="bg-gray-100 text-gray-800 rounded-full px-3 py-1 text-sm">
-                                    {{ $mk['nama'] ?? '-' }}
+                                    {{ $mk['nama'] ?? 'Mata Kuliah' }}
                                     @if(!empty($mk['kelas']))
                                         - Kelas {{ $mk['kelas'] }}
                                     @endif
                                 </span>
-                            @endforeach
+                            @empty
+                                <span class="text-gray-500 italic">Belum ada mata kuliah terdaftar</span>
+                            @endforelse
                         </div>
                     </div>
 

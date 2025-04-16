@@ -20,6 +20,7 @@ use Filament\Tables\Table;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Get;
 use Filament\Forms\Set;
+use Illuminate\Support\Facades\Storage;
 
 class MahasiswaResource extends Resource
 {
@@ -250,7 +251,7 @@ class MahasiswaResource extends Resource
                             ->label('Upload Bukti Pembayaran')
                             ->required()
                             ->disk('public')
-                            ->directory('bukti-pembayaran')
+                            ->directory('bukti_pembayaran')
                             ->visibility('public')
                             ->downloadable()
                             ->acceptedFileTypes(['application/pdf', 'image/jpeg', 'image/png'])
@@ -261,14 +262,14 @@ class MahasiswaResource extends Resource
                             ->label('Upload Bukti KRS')
                             ->required()
                             ->disk('public')
-                            ->directory('bukti-krs')
+                            ->directory('bukti_krs')
                             ->visibility('public')
                             ->downloadable()
                             ->acceptedFileTypes(['application/pdf', 'image/jpeg', 'image/png'])
                             ->maxSize(5120)
                             ->visible(fn ($record) => $record === null),
                     ])
-                    ->visible(fn ($operation) => $operation === 'create')
+                    ->visible(fn ($operation) => $operation === 'create'),
             ]);
     }
 
@@ -295,6 +296,16 @@ class MahasiswaResource extends Resource
                         'sedang magang' => 'warning',
                         'selesai magang' => 'success',
                     }),
+                TextColumn::make('bukti_pembayaran')
+                    ->label('Bukti Pembayaran')
+                    ->formatStateUsing(fn ($state) => $state ? 'Tersedia' : 'Belum upload')
+                    ->badge()
+                    ->color(fn ($state) => $state ? 'success' : 'danger'),
+                TextColumn::make('bukti_krs')
+                    ->label('Bukti KRS')
+                    ->formatStateUsing(fn ($state) => $state ? 'Tersedia' : 'Belum upload')
+                    ->badge()
+                    ->color(fn ($state) => $state ? 'success' : 'danger'),
                 TextColumn::make('created_at')->dateTime()->label('Dibuat'),
             ])
             ->filters([
@@ -323,6 +334,29 @@ class MahasiswaResource extends Resource
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
+                Tables\Actions\Action::make('lihat_bukti_pembayaran')
+                    ->label('Lihat Bukti Pembayaran')
+                    ->icon('heroicon-o-document')
+                    ->url(function (Mahasiswa $record) {
+                        if (empty($record->bukti_pembayaran)) {
+                            return null;
+                        }
+
+                        return url('storage/' . $record->bukti_pembayaran);
+                    }, shouldOpenInNewTab: true)
+                    ->visible(fn (Mahasiswa $record) => !empty($record->bukti_pembayaran)),
+
+                Tables\Actions\Action::make('lihat_bukti_krs')
+                    ->label('Lihat Bukti KRS')
+                    ->icon('heroicon-o-document')
+                    ->url(function (Mahasiswa $record) {
+                        if (empty($record->bukti_krs)) {
+                            return null;
+                        }
+
+                        return url('storage/' . $record->bukti_krs);
+                    }, shouldOpenInNewTab: true)
+                    ->visible(fn (Mahasiswa $record) => !empty($record->bukti_krs)),
             ]);
     }
 

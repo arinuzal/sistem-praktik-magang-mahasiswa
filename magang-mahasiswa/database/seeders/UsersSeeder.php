@@ -44,7 +44,7 @@ class UsersSeeder extends Seeder
         User::create([
             'name' => 'Pak Bambang',
             'nim' => null,
-            'email' => 'arinuzalramadesta@gmail.com',
+            'email' => 'bambang@gmail.com',
             'no_hp' => '08953921223',
             'password' => Hash::make('password123'),
             'role' => 'dosen',

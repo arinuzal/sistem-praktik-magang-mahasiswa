@@ -33,26 +33,18 @@ class MahasiswaController extends Controller
         $buktiPembayaran = $request->file('bukti_pembayaran')->store('bukti_pembayaran', 'public');
         $buktiKrs = $request->file('bukti_krs')->store('bukti_krs', 'public');
 
-        // Format mata kuliah
         $mataKuliahData = [];
 
         if ($request->semester === 'genap') {
             foreach ($request->mata_kuliah as $matkul) {
                 $kelasField = 'kelas_' . str_replace(' ', '_', $matkul);
+                $kelas = $request->input($kelasField);
 
-                // Normalisasi nama mata kuliah
-                $namaMatkul = match($matkul) {
-                    'teknik_pengurusan_perizinan' => 'Teknik Pengurusan Perizinan',
-                    'teknik_pembuatan_perundangan' => 'Teknik Pembuatan Perundang-Undangan',
-                    'teknik_pembuatan_kontrak' => 'Teknik Pembuatan Kontrak',
-                    'penanganan_perkara_konstitusi' => 'Penanganan Perkara Konstitusi',
-                    'arbitrase' => 'Arbitrase dan Alternatif Penyelesaian Sengketa',
-                    default => $matkul
-                };
+                $namaMatkul = $this->normalizeMataKuliahName($matkul);
 
                 $mataKuliahData[] = [
                     'nama' => $namaMatkul,
-                    'kelas' => $request->input($kelasField)
+                    'kelas' => $kelas
                 ];
             }
         } else {
@@ -64,15 +56,12 @@ class MahasiswaController extends Controller
             }
         }
 
-        // Encode dengan format yang konsisten
-        $mataKuliahJson = json_encode($mataKuliahData, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
-
         $mahasiswa = Mahasiswa::create([
             'user_id' => auth()->id(),
             'nama' => auth()->user()->name,
             'nim' => $request->nim,
             'semester' => $request->semester,
-            'mata_kuliah' => $mataKuliahJson,
+            'mata_kuliah' => $mataKuliahData,
             'bukti_pembayaran' => $buktiPembayaran,
             'bukti_krs' => $buktiKrs,
             'link_artikel' => $request->link_artikel,
@@ -101,6 +90,20 @@ class MahasiswaController extends Controller
 
         return redirect()->route('mahasiswa.dashboard')->with('success', 'Pendaftaran berhasil.');
     }
+
+
+protected function normalizeMataKuliahName(string $matkul): string
+{
+    return match($matkul) {
+        'teknik_pengurusan_perizinan' => 'Teknik Pengurusan Perizinan',
+        'teknik_pembuatan_perundangan' => 'Teknik Pembuatan Perundang-Undangan',
+        'teknik_pembuatan_kontrak' => 'Teknik Pembuatan Kontrak',
+        'penanganan_perkara_konstitusi' => 'Penanganan Perkara Konstitusi',
+        'arbitrase' => 'Arbitrase dan Alternatif Penyelesaian Sengketa',
+        default => $matkul
+    };
+}
+
 
     public function dashboard()
     {

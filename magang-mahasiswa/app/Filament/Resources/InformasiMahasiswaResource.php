@@ -149,6 +149,29 @@ class InformasiMahasiswaResource extends Resource
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\Action::make('lihat_bukti_pembayaran')
+                ->label('Lihat Bukti Pembayaran')
+                ->icon('heroicon-o-document')
+                ->url(function (Mahasiswa $record) {
+                    if (empty($record->bukti_pembayaran)) {
+                        return null;
+                    }
+
+                    return url('storage/' . $record->bukti_pembayaran);
+                }, shouldOpenInNewTab: true)
+                ->visible(fn (Mahasiswa $record) => !empty($record->bukti_pembayaran)),
+
+            Tables\Actions\Action::make('lihat_bukti_krs')
+                ->label('Lihat Bukti KRS')
+                ->icon('heroicon-o-document')
+                ->url(function (Mahasiswa $record) {
+                    if (empty($record->bukti_krs)) {
+                        return null;
+                    }
+
+                    return url('storage/' . $record->bukti_krs);
+                }, shouldOpenInNewTab: true)
+                ->visible(fn (Mahasiswa $record) => !empty($record->bukti_krs)),
             ])
             ->bulkActions([]);
     }

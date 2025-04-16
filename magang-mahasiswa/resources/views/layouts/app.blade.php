@@ -8,98 +8,159 @@
 
     <title>@yield('title', 'Sistem Praktik Magang')</title>
 
-    <!-- Favicon -->
     <link rel="icon" href="{{ asset('favicon.ico') }}" type="image/x-icon">
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @stack('styles')
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        .logo-container {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .logo-img {
+            height: 48px;
+            width: 48px;
+            object-fit: contain;
+            transition: transform 0.3s ease;
+        }
+
+        .logo-text {
+            position: relative;
+            margin-left: 12px;
+            font-weight: 700;
+            font-size: 1.25rem;
+            background: linear-gradient(90deg, #ffffff, #dbeafe);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo-text::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, #3b82f6, #93c5fd);
+            transform: scaleX(0);
+            transform-origin: right;
+            transition: transform 0.3s ease;
+        }
+
+        .logo-container:hover .logo-img {
+            transform: rotate(5deg) scale(1.05);
+        }
+
+        .logo-container:hover .logo-text::after {
+            transform: scaleX(1);
+            transform-origin: left;
+        }
+
+        .nav-link {
+            position: relative;
+            padding: 8px 0;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: #93c5fd;
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        @media (max-width: 768px) {
+            .logo-text {
+                font-size: 1rem;
+            }
+        }
+    </style>
 </head>
 
 <body class="bg-gray-50 font-sans antialiased">
-    <!-- Header/Navbar -->
-    <header class="bg-blue-800 text-white shadow-lg sticky top-0 z-50">
+    <header class="bg-gradient-to-r from-blue-800 to-blue-600 text-white shadow-lg sticky top-0 z-50">
         <div class="container mx-auto px-4 py-3">
             <div class="flex justify-between items-center">
-                <!-- Logo Brand -->
-                <div class="flex items-center space-x-3">
-                    <a href="{{ route('home') }}" class="flex items-center">
-                        <img src="{{ asset('images/logo.png') }}" alt="Logo"
-                            class="h-10 w-10 rounded-full bg-white p-1 border border-gray-300 shadow" />
-                        <span class="ml-2 text-xl font-bold hidden sm:inline-block text-white">Sistem Praktik
-                            Magang Mahasiswa</span>
+                <div class="logo-container">
+                    <a href="{{ route('home') }}" class="flex items-center focus:outline-none focus:ring-2 focus:ring-white rounded">
+                        <div class="flex items-center">
+                            <img src="{{ asset('images/logo.png') }}" alt="Logo Universitas"
+                                 class="logo-img rounded-full bg-white p-1 border-2 border-blue-200 shadow-md">
+                            <span class="logo-text hidden sm:inline-block">Sistem Praktik Magang</span>
+                        </div>
                     </a>
                 </div>
 
-
-                <!-- Desktop Navigation -->
                 <nav class="hidden md:flex items-center space-x-8">
-                    <a href="{{ route('home') }}#about"
-                        class="nav-link hover:text-blue-200 transition-colors duration-300">
-                        <i class="fas fa-info-circle mr-2"></i>Tentang
+                    <a href="{{ route('home') }}#about" class="nav-link hover:text-blue-200 transition-colors duration-300 flex items-center">
+                        <i class="fas fa-info-circle mr-2 text-blue-200"></i>Tentang
                     </a>
-                    <a href="{{ route('home') }}#recommendation"
-                        class="nav-link hover:text-blue-200 transition-colors duration-300">
-                        <i class="fas fa-file-signature mr-2"></i>Rekomendasi
+                    <a href="{{ route('home') }}#recommendation" class="nav-link hover:text-blue-200 transition-colors duration-300 flex items-center">
+                        <i class="fas fa-file-signature mr-2 text-blue-200"></i>Rekomendasi
                     </a>
-                    <a href="{{ route('home') }}#praktik"
-                        class="nav-link hover:text-blue-200 transition-colors duration-300">
-                        <i class="fas fa-briefcase mr-2"></i>Praktik
+                    <a href="{{ route('home') }}#praktik" class="nav-link hover:text-blue-200 transition-colors duration-300 flex items-center">
+                        <i class="fas fa-briefcase mr-2 text-blue-200"></i>Praktik
                     </a>
-                    <a href="{{ route('home') }}#contact"
-                        class="nav-link hover:text-blue-200 transition-colors duration-300">
-                        <i class="fas fa-envelope mr-2"></i>Kontak
+                    <a href="{{ route('home') }}#contact" class="nav-link hover:text-blue-200 transition-colors duration-300 flex items-center">
+                        <i class="fas fa-envelope mr-2 text-blue-200"></i>Kontak
                     </a>
                 </nav>
 
                 <div class="flex items-center space-x-4">
                     <a href="{{ route('login') }}"
-                        class="bg-white text-blue-800 px-4 py-2 rounded-md font-medium hover:bg-gray-100 transition flex items-center">
+                       class="bg-white text-blue-800 px-4 py-2 rounded-md font-medium hover:bg-gray-100 transition flex items-center shadow hover:shadow-md">
                         <i class="fas fa-sign-in-alt mr-2"></i>Login
                     </a>
 
                     <a href="{{ route('register') }}"
-                        class="bg-blue-600 text-white px-4 py-2 rounded-md font-medium hover:bg-blue-700 transition flex items-center">
+                       class="bg-blue-500 text-white px-4 py-2 rounded-md font-medium hover:bg-blue-600 transition flex items-center shadow hover:shadow-md">
                         <i class="fas fa-user-plus mr-2"></i>Daftar
                     </a>
 
-
-                    <!-- Mobile Menu Button -->
                     <button id="mobile-menu-button" class="md:hidden text-white focus:outline-none">
                         <i class="fas fa-bars text-2xl"></i>
                     </button>
                 </div>
             </div>
 
-            <!-- Mobile Menu -->
             <div id="mobile-menu" class="md:hidden hidden mt-4 pb-4">
                 <div class="flex flex-col space-y-3">
-                    <a href="{{ route('home') }}#about" class="nav-link hover:bg-blue-700 px-3 py-2 rounded transition">
-                        <i class="fas fa-info-circle mr-2"></i>Tentang Praktik
+                    <a href="{{ route('home') }}#about" class="nav-link hover:bg-blue-700 px-3 py-2 rounded transition flex items-center">
+                        <i class="fas fa-info-circle mr-3 text-blue-200"></i>Tentang Praktik
                     </a>
-                    <a href="{{ route('home') }}#recommendation"
-                        class="nav-link hover:bg-blue-700 px-3 py-2 rounded transition">
-                        <i class="fas fa-file-signature mr-2"></i>Rekomendasi Mandiri
+                    <a href="{{ route('home') }}#recommendation" class="nav-link hover:bg-blue-700 px-3 py-2 rounded transition flex items-center">
+                        <i class="fas fa-file-signature mr-3 text-blue-200"></i>Rekomendasi Mandiri
                     </a>
-                    <a href="{{ route('home') }}#praktik"
-                        class="nav-link hover:bg-blue-700 px-3 py-2 rounded transition">
-                        <i class="fas fa-briefcase mr-2"></i>Praktik Profesional
+                    <a href="{{ route('home') }}#praktik" class="nav-link hover:bg-blue-700 px-3 py-2 rounded transition flex items-center">
+                        <i class="fas fa-briefcase mr-3 text-blue-200"></i>Praktik Profesional
                     </a>
-                    <a href="{{ route('home') }}#contact"
-                        class="nav-link hover:bg-blue-700 px-3 py-2 rounded transition">
-                        <i class="fas fa-envelope mr-2"></i>Kontak Kami
+                    <a href="{{ route('home') }}#contact" class="nav-link hover:bg-blue-700 px-3 py-2 rounded transition flex items-center">
+                        <i class="fas fa-envelope mr-3 text-blue-200"></i>Kontak Kami
                     </a>
 
                     <a href="{{ route('login') }}"
-                        class="bg-white text-blue-800 px-3 py-2 rounded-md font-medium hover:bg-gray-100 transition flex items-center justify-center">
+                       class="bg-white text-blue-800 px-3 py-2 rounded-md font-medium hover:bg-gray-100 transition flex items-center justify-center">
                         <i class="fas fa-sign-in-alt mr-2"></i>Login
                     </a>
 
                     <a href="{{ route('register') }}"
-                        class="bg-blue-600 text-white px-3 py-2 rounded-md font-medium hover:bg-blue-700 transition flex items-center justify-center">
+                       class="bg-blue-500 text-white px-3 py-2 rounded-md font-medium hover:bg-blue-600 transition flex items-center justify-center">
                         <i class="fas fa-user-plus mr-2"></i>Daftar
                     </a>
-
                 </div>
             </div>
         </div>
@@ -109,101 +170,9 @@
         @yield('content')
     </main>
 
-    <!-- Footer -->
     <footer class="bg-gray-800 text-white pt-12 pb-6">
-        <div class="container mx-auto px-4">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
-                <!-- About -->
-                <div>
-                    <h3 class="text-xl font-bold mb-4 flex items-center">
-                        <x-application-logo class="h-6 w-auto mr-2" />
-                        Sistem Praktik Magang
-                    </h3>
-                    <p class="text-gray-400">Platform terintegrasi untuk pengelolaan praktik magang mahasiswa secara
-                        efisien dan terstruktur.</p>
-                </div>
-
-                <!-- Quick Links -->
-                <div>
-                    <h3 class="text-lg font-semibold mb-4 border-b border-gray-700 pb-2">Tautan Cepat</h3>
-                    <ul class="space-y-2">
-                        <li><a href="{{ route('home') }}" class="text-gray-400 hover:text-white transition"><i
-                                    class="fas fa-chevron-right mr-2 text-xs"></i>Beranda</a></li>
-                        <li><a href="{{ route('home') }}#praktik" class="text-gray-400 hover:text-white transition"><i
-                                    class="fas fa-chevron-right mr-2 text-xs"></i>Praktik Profesional</a></li>
-                        <li><a href="{{ route('home') }}#recommendation"
-                                class="text-gray-400 hover:text-white transition"><i
-                                    class="fas fa-chevron-right mr-2 text-xs"></i>Rekomendasi</a></li>
-                        <li><a href="{{ route('home') }}#contact" class="text-gray-400 hover:text-white transition"><i
-                                    class="fas fa-chevron-right mr-2 text-xs"></i>Kontak</a></li>
-                    </ul>
-                </div>
-
-                <!-- Contact Info -->
-                <div>
-                    <h3 class="text-lg font-semibold mb-4 border-b border-gray-700 pb-2">Kontak Kami</h3>
-                    <ul class="space-y-3 text-gray-400">
-                        <li class="flex items-start">
-                            <i class="fas fa-map-marker-alt mt-1 mr-3"></i>
-                            <span>Jl. Universitas No. 1, Kota Anda, Indonesia</span>
-                        </li>
-                        <li class="flex items-center">
-                            <i class="fas fa-phone-alt mr-3"></i>
-                            <span>(021) 1234-5678</span>
-                        </li>
-                        <li class="flex items-center">
-                            <i class="fas fa-envelope mr-3"></i>
-                            <span>praktik@univ.ac.id</span>
-                        </li>
-                    </ul>
-                </div>
-
-                <!-- Social Media -->
-                <div>
-                    <h3 class="text-lg font-semibold mb-4 border-b border-gray-700 pb-2">Media Sosial</h3>
-                    <div class="flex space-x-4">
-                        <a href="#" class="text-gray-400 hover:text-white transition text-2xl">
-                            <i class="fab fa-facebook"></i>
-                        </a>
-                        <a href="#" class="text-gray-400 hover:text-white transition text-2xl">
-                            <i class="fab fa-twitter"></i>
-                        </a>
-                        <a href="#" class="text-gray-400 hover:text-white transition text-2xl">
-                            <i class="fab fa-instagram"></i>
-                        </a>
-                        <a href="#" class="text-gray-400 hover:text-white transition text-2xl">
-                            <i class="fab fa-youtube"></i>
-                        </a>
-                    </div>
-                    <div class="mt-4">
-                        <p class="text-gray-400 mb-2">Subscribe newsletter:</p>
-                        <form class="flex">
-                            <input type="email" placeholder="Email Anda"
-                                class="px-3 py-2 bg-gray-700 text-white rounded-l focus:outline-none focus:ring-1 focus:ring-blue-500 w-full">
-                            <button type="submit"
-                                class="bg-blue-600 text-white px-4 py-2 rounded-r hover:bg-blue-700 transition">
-                                <i class="fas fa-paper-plane"></i>
-                            </button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Copyright -->
-            <div class="border-t border-gray-700 pt-6 flex flex-col md:flex-row justify-between items-center">
-                <p class="text-gray-400 text-sm mb-4 md:mb-0">
-                    &copy; {{ date('Y') }} Sistem Praktik Magang Mahasiswa
-                </p>
-                <div class="flex space-x-6">
-                    <a href="#" class="text-gray-400 hover:text-white transition text-sm">Kebijakan Privasi</a>
-                    <a href="#" class="text-gray-400 hover:text-white transition text-sm">Syarat & Ketentuan</a>
-                    <a href="#" class="text-gray-400 hover:text-white transition text-sm">FAQ</a>
-                </div>
-            </div>
-        </div>
     </footer>
 
-    <!-- Back to Top Button -->
     <button id="back-to-top"
         class="fixed bottom-8 right-8 bg-blue-600 text-white p-3 rounded-full shadow-lg opacity-0 invisible transition-all duration-300 hover:bg-blue-700">
         <i class="fas fa-arrow-up"></i>

@@ -10,6 +10,32 @@ class Mahasiswa extends Model
         'mata_kuliah' => 'array',
     ];
 
+    public function getMataKuliahFormattedAttribute()
+{
+    $mataKuliah = $this->mata_kuliah;
+
+    if (is_string($mataKuliah)) {
+        try {
+            $mataKuliah = json_decode($mataKuliah, true) ?? [];
+        } catch (\Exception $e) {
+            $mataKuliah = [];
+        }
+    }
+
+    if (!empty($mataKuliah) && is_string($mataKuliah[0] ?? null)) {
+        $formatted = [];
+        foreach ($mataKuliah as $item) {
+            $parts = explode('_', $item);
+            $kelas = array_pop($parts);
+            $nama = str_replace('_', ' ', implode('_', $parts));
+            $formatted[] = ['nama' => $nama, 'kelas' => $kelas];
+        }
+        return $formatted;
+    }
+
+    return is_array($mataKuliah) ? $mataKuliah : [];
+}
+
     protected $fillable = [
         'user_id',
         'nama',
