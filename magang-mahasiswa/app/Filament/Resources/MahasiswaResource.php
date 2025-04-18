@@ -80,19 +80,44 @@ class MahasiswaResource extends Resource
                             ->visible(fn () => in_array(auth()->user()->role, ['admin', 'super admin'])),
                     ]),
 
-                Section::make('Mata Kuliah')
+                    Section::make('Penilaian')
                     ->schema([
-                        CheckboxList::make('mata_kuliah')
-                            ->label('Pilih Mata Kuliah')
-                            ->options([
-                                'PP Agama' => 'PP Agama',
-                                'PP Konstitusi' => 'PP Konstitusi',
-                                'PP Perdata' => 'PP Perdata',
-                                'PP Pidana' => 'PP Pidana',
-                                'PP TUN' => 'PP TUN',
-                            ])
-                            ->columns(2)
-                            ->visible(fn (Get $get) => $get('semester') === 'gasal'),
+                        TextInput::make('nilai_magang')
+                            ->label('Nilai Magang')
+                            ->numeric()
+                            ->minValue(0)
+                            ->maxValue(100)
+                            ->suffixIcon('heroicon-o-academic-cap')
+                            ->visible(fn ($operation) => $operation === 'edit'),
+                    ])
+                    ->collapsible()
+                    ->visible(fn ($operation) => $operation === 'edit' || $operation === 'view'),
+
+                Section::make('Mata Kuliah')
+                ->schema([
+                    CheckboxList::make('mata_kuliah_gasal')
+                        ->label('Pilih Mata Kuliah')
+                        ->options([
+                            'PP Agama' => 'PP Agama',
+                            'PP Konstitusi' => 'PP Konstitusi',
+                            'PP Perdata' => 'PP Perdata',
+                            'PP Pidana' => 'PP Pidana',
+                            'PP TUN' => 'PP TUN',
+                        ])
+                        ->columns(2)
+                        ->visible(fn (Get $get) => $get('semester') === 'gasal')
+                        ->afterStateHydrated(function (Set $set, $state, $record) {
+                            if ($record && $record->semester === 'gasal') {
+                                $mataKuliah = array_column($record->mata_kuliah ?? [], 'nama');
+                                $set('mata_kuliah_gasal', $mataKuliah);
+                            }
+                        })
+                        ->live()
+                        ->afterStateUpdated(function (Set $set, $state) {
+                            $set('mata_kuliah', array_map(function($matkul) {
+                                return ['nama' => $matkul, 'kelas' => null];
+                            }, $state));
+                        }),
 
                         Grid::make()
                             ->schema([
@@ -227,23 +252,70 @@ class MahasiswaResource extends Resource
                             ->columns(2)
                             ->visible(fn (Get $get) => $get('semester') === 'genap'),
 
-                        Hidden::make('mata_kuliah')
+                            Hidden::make('mata_kuliah')
                             ->default([])
                             ->dehydrateStateUsing(function ($state, Get $get) {
                                 if ($get('semester') === 'gasal') {
+                                    $gasalMataKuliah = request()->input('mata_kuliah_gasal', []);
                                     return array_map(function($matkul) {
                                         return ['nama' => $matkul, 'kelas' => null];
-                                    }, $state);
+                                    }, $gasalMataKuliah);
                                 }
                                 return $state;
                             }),
                     ])
                     ->visible(fn (Get $get) => !empty($get('semester'))),
 
-                ViewField::make('mata_kuliah')
+                    ViewField::make('mata_kuliah')
                     ->label('Mata Kuliah & Kelas')
                     ->view('filament.components.mata-kuliah-kelas')
-                    ->visibleOn(['view', 'edit']),
+                    ->visibleOn(['view', 'edit'])
+                    ->afterStateHydrated(function (Set $set, $state, $record) {
+                        if ($record && $record->semester === 'gasal') {
+                            $mataKuliah = array_column($record->mata_kuliah ?? [], 'nama');
+                            $set('mata_kuliah_gasal', $mataKuliah);
+                        }
+                    }),
+                    Section::make('Informasi Tambahan')
+                    ->schema([
+                        TextInput::make('video_mediasi')
+                            ->label('Link Video Pengurusan Perizinan')
+                            ->url()
+                            ->columnSpanFull()
+                            ->visible(fn (Get $get) => $get('semester') === 'genap')
+                            ->disabled()
+                            ->suffixIcon('heroicon-o-film'),
+
+                        TextInput::make('video_penyuluhan')
+                            ->label('Upload Link Laporan Penyuluhan')
+                            ->url()
+                            ->columnSpanFull()
+                            ->visible(fn (Get $get) => $get('semester') === 'genap')
+                            ->disabled()
+                            ->suffixIcon('heroicon-o-film'),
+
+                        TextInput::make('ceklis_penyuluhan_status')
+                            ->label('Status Penyuluhan')
+                            ->formatStateUsing(fn ($state) => $state ? 'Sudah Dilakukan' : 'Belum Dilakukan')
+                            ->visible(fn (Get $get) => $get('semester') === 'gasal')
+                            ->disabled()
+                            ->suffixIcon(fn ($state) => $state ? 'heroicon-o-check-circle' : 'heroicon-o-x-circle')
+                            ->suffixIconColor(fn ($state) => $state ? 'success' : 'danger'),
+
+                        TextInput::make('ceklis_artikel_status')
+                            ->label('Status Artikel')
+                            ->formatStateUsing(fn ($state) => $state ? 'Sudah Diunggah' : 'Belum Diunggah')
+                            ->visible(fn (Get $get) => $get('semester') === 'gasal')
+                            ->disabled()
+                            ->suffixIcon(fn ($state) => $state ? 'heroicon-o-check-circle' : 'heroicon-o-x-circle')
+                            ->suffixIconColor(fn ($state) => $state ? 'success' : 'danger'),
+                    ])
+                    ->collapsible()
+                    ->visibleOn('view')
+                    ->afterStateHydrated(function (Set $set, $record) {
+                        $set('ceklis_penyuluhan_status', $record->ceklis_penyuluhan ?? false);
+                        $set('ceklis_artikel_status', $record->ceklis_artikel ?? false);
+                    }),
 
                 Section::make('Dokumen')
                     ->schema([
@@ -276,88 +348,177 @@ class MahasiswaResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->columns([
-                TextColumn::make('nama')->label('Nama')->searchable(),
-                TextColumn::make('nim')->searchable(),
-                TextColumn::make('semester'),
-                TextColumn::make('status_dokumen')
-                    ->badge()
-                    ->label('Status Dokumen')
-                    ->color(fn ($state) => match ($state) {
-                        'belum dikonfirmasi' => 'gray',
-                        'disetujui' => 'success',
-                        'ditolak' => 'danger',
-                    }),
-                TextColumn::make('status_magang')
-                    ->badge()
-                    ->label('Status Magang')
-                    ->color(fn ($state) => match ($state) {
-                        'belum magang' => 'gray',
-                        'sedang magang' => 'warning',
-                        'selesai magang' => 'success',
-                    }),
-                TextColumn::make('bukti_pembayaran')
-                    ->label('Bukti Pembayaran')
-                    ->formatStateUsing(fn ($state) => $state ? 'Tersedia' : 'Belum upload')
-                    ->badge()
-                    ->color(fn ($state) => $state ? 'success' : 'danger'),
-                TextColumn::make('bukti_krs')
-                    ->label('Bukti KRS')
-                    ->formatStateUsing(fn ($state) => $state ? 'Tersedia' : 'Belum upload')
-                    ->badge()
-                    ->color(fn ($state) => $state ? 'success' : 'danger'),
-                TextColumn::make('created_at')->dateTime()->label('Dibuat'),
-            ])
-            ->filters([
-                Tables\Filters\SelectFilter::make('semester')
-                    ->label('Semester')
-                    ->options([
-                        'gasal' => 'Gasal',
-                        'genap' => 'Genap',
-                    ]),
-                Tables\Filters\SelectFilter::make('status_dokumen')
-                    ->label('Status Dokumen')
-                    ->options([
-                        'belum dikonfirmasi' => 'Belum Dikonfirmasi',
-                        'disetujui' => 'Disetujui',
-                        'ditolak' => 'Ditolak',
-                    ]),
-                Tables\Filters\SelectFilter::make('status_magang')
-                    ->label('Status Magang')
-                    ->options([
-                        'belum magang' => 'Belum Magang',
-                        'sedang magang' => 'Sedang Magang',
-                        'selesai magang' => 'Selesai Magang',
-                    ]),
-            ])
-            ->actions([
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+        ->columns([
+            TextColumn::make('index')
+                ->label('No')
+                ->rowIndex()
+                ->alignCenter(),
+
+            TextColumn::make('nama')
+                ->label('Nama')
+                ->searchable()
+                ->sortable()
+                ->weight('medium')
+                ->description(fn (Mahasiswa $record) => $record->nim)
+                ->wrap(),
+
+            TextColumn::make('semester')
+                ->label('Semester')
+                ->badge()
+                ->color(fn (string $state): string => match ($state) {
+                    'gasal' => 'info',
+                    'genap' => 'success',
+                })
+                ->alignCenter()
+                ->sortable(),
+
+            TextColumn::make('nilai_magang')
+                ->label('Nilai Magang')
+                ->numeric()
+                ->sortable()
+                ->alignCenter()
+                ->color(function ($state) {
+                    if ($state >= 85) return 'success';
+                    if ($state >= 70) return 'warning';
+                    return 'danger';
+                })
+                ->icon(function ($state) {
+                    if ($state >= 70) return 'heroicon-o-check-circle';
+                    return 'heroicon-o-x-circle';
+                }),
+
+            TextColumn::make('status_dokumen')
+                ->label('Status Dokumen')
+                ->badge()
+                ->color(fn (string $state): string => match ($state) {
+                    'belum dikonfirmasi' => 'gray',
+                    'disetujui' => 'success',
+                    'ditolak' => 'danger',
+                    default => 'gray',
+                })
+                ->icon(fn (string $state): string => match ($state) {
+                    'belum dikonfirmasi' => 'heroicon-o-clock',
+                    'disetujui' => 'heroicon-o-check-circle',
+                    'ditolak' => 'heroicon-o-x-circle',
+                    default => 'heroicon-o-question-mark-circle',
+                })
+                ->alignCenter()
+                ->sortable(),
+
+            TextColumn::make('status_magang')
+                ->label('Status Magang')
+                ->badge()
+                ->color(fn (string $state): string => match ($state) {
+                    'belum magang' => 'gray',
+                    'sedang magang' => 'warning',
+                    'selesai magang' => 'success',
+                    default => 'gray',
+                })
+                ->icon(fn (string $state): string => match ($state) {
+                    'belum magang' => 'heroicon-o-academic-cap',
+                    'sedang magang' => 'heroicon-o-briefcase',
+                    'selesai magang' => 'heroicon-o-check-badge',
+                    default => 'heroicon-o-question-mark-circle',
+                })
+                ->alignCenter()
+                ->sortable(),
+        ])
+        ->filters([
+            Tables\Filters\SelectFilter::make('semester')
+                ->label('Semester')
+                ->options([
+                    'gasal' => 'Gasal',
+                    'genap' => 'Genap',
+                ]),
+
+            Tables\Filters\SelectFilter::make('status_dokumen')
+                ->label('Status Dokumen')
+                ->options([
+                    'belum dikonfirmasi' => 'Belum Dikonfirmasi',
+                    'disetujui' => 'Disetujui',
+                    'ditolak' => 'Ditolak',
+                ]),
+
+            Tables\Filters\SelectFilter::make('status_magang')
+                ->label('Status Magang')
+                ->options([
+                    'belum magang' => 'Belum Magang',
+                    'sedang magang' => 'Sedang Magang',
+                    'selesai magang' => 'Selesai Magang',
+                ]),
+        ])
+        ->actions([
+            Tables\Actions\ViewAction::make()
+                ->icon('heroicon-o-eye')
+                ->color('primary'),
+
+            Tables\Actions\EditAction::make()
+                ->icon('heroicon-o-pencil')
+                ->color('success'),
+
+            Tables\Actions\DeleteAction::make()
+                ->icon('heroicon-o-trash')
+                ->color('danger'),
+
+            Tables\Actions\ActionGroup::make([
                 Tables\Actions\Action::make('lihat_bukti_pembayaran')
-                    ->label('Lihat Bukti Pembayaran')
-                    ->icon('heroicon-o-document')
+                    ->label('Bukti Pembayaran')
+                    ->icon('heroicon-o-banknotes')
+                    ->color('info')
                     ->url(function (Mahasiswa $record) {
                         if (empty($record->bukti_pembayaran)) {
                             return null;
                         }
-
                         return url('storage/' . $record->bukti_pembayaran);
                     }, shouldOpenInNewTab: true)
                     ->visible(fn (Mahasiswa $record) => !empty($record->bukti_pembayaran)),
 
                 Tables\Actions\Action::make('lihat_bukti_krs')
-                    ->label('Lihat Bukti KRS')
-                    ->icon('heroicon-o-document')
+                    ->label('Bukti KRS')
+                    ->icon('heroicon-o-document-text')
+                    ->color('info')
                     ->url(function (Mahasiswa $record) {
                         if (empty($record->bukti_krs)) {
                             return null;
                         }
-
                         return url('storage/' . $record->bukti_krs);
                     }, shouldOpenInNewTab: true)
                     ->visible(fn (Mahasiswa $record) => !empty($record->bukti_krs)),
-            ]);
+
+                Tables\Actions\Action::make('lihat_video_mediasi')
+                    ->label('Video Pengurusan Perizinan')
+                    ->icon('heroicon-o-film')
+                    ->color('info')
+                    ->url(function (Mahasiswa $record) {
+                        return $record->video_mediasi;
+                    }, shouldOpenInNewTab: true)
+                    ->visible(fn (Mahasiswa $record) => !empty($record->video_mediasi)),
+
+                Tables\Actions\Action::make('lihat_video_penyuluhan')
+                    ->label('Laporan Penyuluhan')
+                    ->icon('heroicon-o-film')
+                    ->color('info')
+                    ->url(function (Mahasiswa $record) {
+                        return $record->video_penyuluhan;
+                    }, shouldOpenInNewTab: true)
+                    ->visible(fn (Mahasiswa $record) => !empty($record->video_penyuluhan)),
+
+                Tables\Actions\Action::make('lihat_artikel')
+                    ->label('Artikel')
+                    ->icon('heroicon-o-newspaper')
+                    ->color('info')
+                    ->url(function (Mahasiswa $record) {
+                        return $record->link_artikel;
+                    }, shouldOpenInNewTab: true)
+                    ->visible(fn (Mahasiswa $record) => !empty($record->link_artikel)),
+            ])
+            ->label('Dokumen')
+            ->icon('heroicon-o-folder')
+            ->color('gray')
+            ->dropdown(),
+        ])
+        ->defaultSort('nama', 'asc')
+        ->striped();
     }
 
     public static function getPages(): array

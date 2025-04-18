@@ -25,8 +25,8 @@ class MahasiswaController extends Controller
             'mata_kuliah' => 'required|array|min:1',
             'bukti_pembayaran' => 'required|file|mimes:pdf,jpg,jpeg,png',
             'bukti_krs' => 'required|file|mimes:pdf,jpg,jpeg,png',
-            'video_mediasi' => 'nullable|file|mimes:mp4,mov,avi|max:20480',
-            'video_penyuluhan' => 'nullable|file|mimes:mp4,mov,avi|max:20480',
+            'video_mediasi' => 'nullable|url',
+            'video_penyuluhan' => 'nullable|url',
             'nilai_magang' => 'nullable|numeric|between:0,100',
         ]);
 
@@ -170,30 +170,24 @@ protected function normalizeMataKuliahName(string $matkul): string
     }
 
     public function uploadVideo(Request $request)
-{
-    $request->validate([
-        'video_mediasi' => 'nullable|file|mimes:mp4,mov,avi|max:20480',
-        'video_penyuluhan' => 'nullable|file|mimes:mp4,mov,avi|max:20480',
-    ]);
+    {
+        $request->validate([
+            'video_mediasi' => 'nullable|url',
+            'video_penyuluhan' => 'nullable|url',
+        ]);
 
-    $mahasiswa = auth()->user()->mahasiswa;
+        $mahasiswa = auth()->user()->mahasiswa;
 
-    if ($request->hasFile('video_mediasi')) {
-        $file = $request->file('video_mediasi');
-        $filename = time() . '_mediasi.' . $file->getClientOriginalExtension();
-        $file->move(public_path('uploads/video'), $filename);
-        $mahasiswa->video_mediasi = $filename;
+        if ($request->filled('video_mediasi')) {
+            $mahasiswa->video_mediasi = $request->video_mediasi;
+        }
+
+        if ($request->filled('video_penyuluhan')) {
+            $mahasiswa->video_penyuluhan = $request->video_penyuluhan;
+        }
+
+        $mahasiswa->save();
+
+        return back()->with('success', 'Link video berhasil disimpan.');
     }
-
-    if ($request->hasFile('video_penyuluhan')) {
-        $file = $request->file('video_penyuluhan');
-        $filename = time() . '_penyuluhan.' . $file->getClientOriginalExtension();
-        $file->move(public_path('uploads/video'), $filename);
-        $mahasiswa->video_penyuluhan = $filename;
-    }
-
-    $mahasiswa->save();
-
-    return back()->with('success', 'Video berhasil diupload.');
-}
 }

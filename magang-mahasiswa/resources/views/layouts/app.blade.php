@@ -171,6 +171,105 @@
     </main>
 
     <footer class="bg-gray-800 text-white pt-12 pb-6">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div class="mb-6">
+                    <div class="flex items-center mb-4">
+                        <img src="{{ asset('images/logo.png') }}" alt="Logo Universitas"
+                             class="h-10 w-10 rounded-full bg-white p-1 border-2 border-blue-200 mr-3">
+                        <h3 class="text-xl font-bold bg-gradient-to-r from-blue-400 to-blue-200 bg-clip-text text-transparent">
+                            Sistem Praktik Magang
+                        </h3>
+                    </div>
+                    <p class="text-gray-300 mb-4">
+                        Sistem manajemen praktik magang mahasiswa yang terintegrasi untuk memudahkan proses administrasi dan monitoring.
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-300 hover:text-blue-300 transition">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="text-gray-300 hover:text-blue-300 transition">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="text-gray-300 hover:text-blue-300 transition">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" class="text-gray-300 hover:text-blue-300 transition">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="mb-6">
+                    <h3 class="text-lg font-semibold mb-4 border-b border-blue-600 pb-2">Link Cepat</h3>
+                    <ul class="space-y-2">
+                        <li>
+                            <a href="{{ route('home') }}" class="text-gray-300 hover:text-blue-300 transition flex items-center">
+                                <i class="fas fa-chevron-right text-xs mr-2 text-blue-300"></i> Beranda
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('login') }}" class="text-gray-300 hover:text-blue-300 transition flex items-center">
+                                <i class="fas fa-chevron-right text-xs mr-2 text-blue-300"></i> Login
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('register') }}" class="text-gray-300 hover:text-blue-300 transition flex items-center">
+                                <i class="fas fa-chevron-right text-xs mr-2 text-blue-300"></i> Daftar
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('home') }}#contact" class="text-gray-300 hover:text-blue-300 transition flex items-center">
+                                <i class="fas fa-chevron-right text-xs mr-2 text-blue-300"></i> Kontak
+                            </a>
+                        </li>
+
+                    </ul>
+                </div>
+
+                <div class="mb-6">
+                    <h3 class="text-lg font-semibold mb-4 border-b border-blue-600 pb-2">Kontak Kami</h3>
+                    <ul class="space-y-3">
+                        <li class="flex items-start">
+                            <i class="fas fa-map-marker-alt text-blue-300 mt-1 mr-3"></i>
+                            <span class="text-gray-300">Jl. Contoh No. 123, Kota Anda, Provinsi Anda, Kode Pos 12345</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-phone-alt text-blue-300 mr-3"></i>
+                            <span class="text-gray-300">(021) 1234-5678</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-envelope text-blue-300 mr-3"></i>
+                            <span class="text-gray-300">magang@universitasanda.ac.id</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-clock text-blue-300 mr-3"></i>
+                            <span class="text-gray-300">Senin - Jumat: 08:00 - 16:00</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="mb-6">
+                    <h3 class="text-lg font-semibold mb-4 border-b border-blue-600 pb-2">Berlangganan</h3>
+                    <p class="text-gray-300 mb-4">
+                        Dapatkan informasi terbaru tentang praktik magang langsung ke email Anda.
+                    </p>
+                </div>
+            </div>
+
+            <div class="border-t border-gray-700 mt-8 pt-6 text-center text-gray-400">
+                <p>
+                    &copy; {{ date('Y') }} Sistem Praktik Magang - Universitas Anda. Semua hak dilindungi.
+                </p>
+                <div class="flex justify-center space-x-4 mt-2">
+                    <a href="#" class="hover:text-blue-300 transition">Kebijakan Privasi</a>
+                    <span>|</span>
+                    <a href="#" class="hover:text-blue-300 transition">Syarat & Ketentuan</a>
+                    <span>|</span>
+                    <a href="#" class="hover:text-blue-300 transition">Peta Situs</a>
+                </div>
+            </div>
+        </div>
     </footer>
 
     <button id="back-to-top"
