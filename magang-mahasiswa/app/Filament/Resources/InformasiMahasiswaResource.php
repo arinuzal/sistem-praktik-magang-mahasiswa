@@ -3,6 +3,8 @@
 namespace App\Filament\Resources;
 
 use App\Models\Mahasiswa;
+use App\Models\TempatMagang;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Forms;
 use Filament\Tables;
 use Filament\Forms\Components\Select;
@@ -40,6 +42,20 @@ class InformasiMahasiswaResource extends Resource
                         TextInput::make('semester')
                             ->label('Semester')
                             ->disabled(),
+
+        Forms\Components\Toggle::make('is_luar_biasa')
+        ->label('Mahasiswa Luar Biasa')
+        ->inline(false)
+        ->visible(fn () => auth()->user()->role === 'admin'),
+
+    Select::make('tempat_magang_id')
+        ->label('Tempat Magang')
+        ->options(TempatMagang::all()->pluck('nama_instansi', 'id'))
+        ->searchable()
+        ->nullable()
+        ->visible(fn () => auth()->user()->role === 'admin')
+        ->relationship('tempatMagang', 'nama_instansi'),
+
                     ])->columns(2),
 
                 Section::make('Status & Dokumen')
@@ -123,41 +139,72 @@ class InformasiMahasiswaResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('nama')
-                    ->label('Nama')
-                    ->searchable(),
+                TextColumn::make('index')
+                ->label('No')
+                ->rowIndex()
+                ->alignCenter(),
 
-                Tables\Columns\TextColumn::make('nim')
-                    ->label('NIM')
-                    ->searchable(),
+                TextColumn::make('nama')
+                ->label('Nama')
+                ->searchable()
+                ->sortable()
+                ->weight('medium')
+                ->description(fn (Mahasiswa $record) => $record->nim)
+                ->wrap(),
+
+                TextColumn::make('semester')
+                 ->label('Semester')
+                 ->badge()
+                 ->color(fn (string $state): string => match ($state) {
+                     'gasal' => 'info',
+                     'genap' => 'success',
+                 })
+                 ->alignCenter()
+                 ->sortable(),
 
                 Tables\Columns\TextColumn::make('kelompok')
-                    ->label('Kelompok'),
+                    ->label('Kelompok')
+                    ->sortable(),
 
-                Tables\Columns\TextColumn::make('semester')
-                    ->label('Semester')
-                    ->badge()
-                    ->color(fn (string $state): string => match ($state) {
-                        'gasal' => 'blue',
-                        'genap' => 'green',
-                        default => 'gray',
-                    }),
-
-                Tables\Columns\TextColumn::make('nilai_magang')
+                    TextColumn::make('nilai_magang')
                     ->label('Nilai Magang')
                     ->numeric()
+                    ->sortable()
+                    ->alignCenter()
                     ->color(function ($state) {
                         if ($state >= 85) return 'success';
                         if ($state >= 70) return 'warning';
                         return 'danger';
+                    })
+                    ->placeholder('Belum ada')
+                    ->icon(function ($state) {
+                        if ($state >= 70) return 'heroicon-o-check-circle';
+                        return 'heroicon-o-x-circle';
                     }),
 
                 Tables\Columns\TextColumn::make('penilaian.nilai_akhir')
-                    ->label('Nilai Akhir'),
+                    ->label('Nilai Akhir')
+                    ->sortable()
+                    ->placeholder('Belum ada'),
+
+                Tables\Columns\TextColumn::make('tempatMagang.nama_instansi')
+                    ->label('Tempat Magang')
+                    ->placeholder('Belum ada')
+                    ->sortable()
+                    ->searchable(),
+
+                TextColumn::make('is_luar_biasa')
+                    ->label('Status Mahasiswa')
+                    ->formatStateUsing(fn ($state): string => $state ? 'Luar Biasa' : 'Reguler')
+                    ->badge()
+                    ->color(fn (string $state): string => $state ? 'warning' : 'gray')
+                    ->alignCenter()
+                    ->sortable(),
 
                 Tables\Columns\TextColumn::make('status_dokumen')
                     ->label('Status Dokumen')
                     ->badge()
+                    ->sortable()
                     ->color(fn (string $state): string => match ($state) {
                         'disetujui' => 'success',
                         'ditolak' => 'danger',
@@ -168,6 +215,7 @@ class InformasiMahasiswaResource extends Resource
                 Tables\Columns\TextColumn::make('status_magang')
                     ->label('Status Magang')
                     ->badge()
+                    ->sortable()
                     ->color(fn (string $state): string => match ($state) {
                         'belum magang' => 'gray',
                         'sedang magang' => 'warning',

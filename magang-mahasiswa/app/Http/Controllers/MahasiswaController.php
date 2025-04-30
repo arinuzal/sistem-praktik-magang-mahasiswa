@@ -77,15 +77,19 @@ class MahasiswaController extends Controller
         $jumlahTempatMagang = TempatMagang::count();
         $tempatMagangs = TempatMagang::all();
 
-        $totalMahasiswa = Mahasiswa::count();
+        $semuaMahasiswa = Mahasiswa::orderBy('nim')->get();
 
-        $kelompok = ($totalMahasiswa - 1) % $jumlahTempatMagang;
+        $indexMahasiswa = $semuaMahasiswa->search(function ($mhs) use ($mahasiswa) {
+        return $mhs->id === $mahasiswa->id;
+        });
+
+        $kelompok = $indexMahasiswa % $jumlahTempatMagang;
         $tempatMagang = $tempatMagangs[$kelompok] ?? null;
 
         $mahasiswa->kelompok = $kelompok + 1;
         $mahasiswa->tempat_magang_id = $tempatMagang?->id;
-
         $mahasiswa->is_luar_biasa = $request->has('luar_biasa');
+
         $mahasiswa->save();
 
         return redirect()->route('mahasiswa.dashboard')->with('success', 'Pendaftaran berhasil.');

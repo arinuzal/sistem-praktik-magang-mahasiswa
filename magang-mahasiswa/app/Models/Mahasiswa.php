@@ -41,6 +41,8 @@ class Mahasiswa extends Model
         'nama',
         'nim',
         'semester',
+        'is_luar_biasa',
+        'tempat_magang_id',
         'mata_kuliah',
         'bukti_pembayaran',
         'bukti_krs',

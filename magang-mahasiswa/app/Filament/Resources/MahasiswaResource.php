@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\MahasiswaResource\Pages;
 use App\Models\Mahasiswa;
+use App\Models\TempatMagang;
 use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -50,6 +51,13 @@ class MahasiswaResource extends Resource
                         TextInput::make('nama')->required(),
                         TextInput::make('nim')->required()->unique(ignoreRecord: true),
 
+                        Select::make('tempat_magang_id')
+                          ->label('Tempat Magang')
+                          ->options(TempatMagang::all()->pluck('nama_instansi', 'id'))
+                          ->searchable()
+                          ->nullable()
+                          ->visible(fn () => in_array(auth()->user()->role, ['super admin'])),
+
                         Select::make('semester')
                             ->options([
                                 'gasal' => 'Gasal',
@@ -78,6 +86,10 @@ class MahasiswaResource extends Resource
                             ])
                             ->default('belum magang')
                             ->visible(fn () => in_array(auth()->user()->role, ['admin', 'super admin'])),
+
+                            Forms\Components\Toggle::make('is_luar_biasa')
+                            ->label('Mahasiswa Luar Biasa')
+                            ->inline(false),
                     ]),
 
                     Section::make('Penilaian')
@@ -382,10 +394,26 @@ class MahasiswaResource extends Resource
                     if ($state >= 70) return 'warning';
                     return 'danger';
                 })
+                ->placeholder('Belum ada')
                 ->icon(function ($state) {
                     if ($state >= 70) return 'heroicon-o-check-circle';
                     return 'heroicon-o-x-circle';
                 }),
+
+            TextColumn::make('tempatMagang.nama_instansi')
+                ->label('Tempat Magang')
+                ->searchable()
+                ->sortable()
+                ->wrap()
+                ->placeholder('Belum ada'),
+
+            TextColumn::make('is_luar_biasa')
+                ->label('Status Mahasiswa')
+                ->formatStateUsing(fn ($state): string => $state ? 'Luar Biasa' : 'Reguler')
+                ->badge()
+                ->color(fn (string $state): string => $state ? 'warning' : 'gray')
+                ->alignCenter()
+                ->sortable(),
 
             TextColumn::make('status_dokumen')
                 ->label('Status Dokumen')
@@ -445,6 +473,13 @@ class MahasiswaResource extends Resource
                     'belum magang' => 'Belum Magang',
                     'sedang magang' => 'Sedang Magang',
                     'selesai magang' => 'Selesai Magang',
+                ]),
+
+            Tables\Filters\SelectFilter::make('is_luar_biasa')
+                ->label('Status Mahasiswa')
+                ->options([
+                    true => 'Luar Biasa',
+                    false => 'Reguler',
                 ]),
         ])
         ->actions([
