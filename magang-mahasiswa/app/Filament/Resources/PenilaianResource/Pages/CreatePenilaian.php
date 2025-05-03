@@ -22,10 +22,11 @@ class CreatePenilaian extends CreateRecord
     private function hitungNilaiAkhir(array $data): float
     {
         $nilaiMagang = $data['nilai_magang'] ?? 0;
+        $nilaiMediasi = $data['nilai_mediasi'] ?? 0;
         $nilaiVideo = $data['nilai_video_mediasi'] ?? 0;
         $nilaiPenyuluhan = $data['nilai_penyuluhan'] ?? 0;
 
-        return round(($nilaiMagang + $nilaiVideo + $nilaiPenyuluhan) / 3, 2);
+        return round(($nilaiMagang + $nilaiMediasi + $nilaiVideo + $nilaiPenyuluhan) / 4, 2);
     }
 
     protected function afterCreate(): void

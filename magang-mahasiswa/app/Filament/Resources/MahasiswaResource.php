@@ -34,6 +34,21 @@ class MahasiswaResource extends Resource
         return auth()->user()?->role === 'super admin';
     }
 
+    public static function getNavigationLabel(): string
+    {
+        return 'Mahasiswa';
+    }
+
+    public static function getPluralLabel(): string
+    {
+        return 'Mahasiswa';
+    }
+
+    public static function getSlug(): string
+    {
+         return 'mahasiswa';
+    }
+
     public static function form(Form $form): Form
     {
         return $form
@@ -124,13 +139,15 @@ class MahasiswaResource extends Resource
                                 $set('mata_kuliah_gasal', $mataKuliah);
                             }
                         })
-                        ->live()
-                        ->afterStateUpdated(function (Set $set, $state) {
-                            $set('mata_kuliah', array_map(function($matkul) {
-                                return ['nama' => $matkul, 'kelas' => null];
-                            }, $state));
-                        }),
+                        ->afterStateUpdated(function (Set $set, Get $get, $state) {
+                            if (is_array($state)) {
+                                $mataKuliahArray = array_map(function($mk) {
+                                    return ['nama' => $mk, 'kelas' => null];
+                                }, $state);
 
+                                $set('mata_kuliah', $mataKuliahArray);
+                            }
+                        }),
                         Grid::make()
                             ->schema([
                                 Select::make('mata_kuliah_teknik_pengurusan_perizinan')
@@ -264,17 +281,20 @@ class MahasiswaResource extends Resource
                             ->columns(2)
                             ->visible(fn (Get $get) => $get('semester') === 'genap'),
 
-                            Hidden::make('mata_kuliah')
-                            ->default([])
-                            ->dehydrateStateUsing(function ($state, Get $get) {
-                                if ($get('semester') === 'gasal') {
-                                    $gasalMataKuliah = request()->input('mata_kuliah_gasal', []);
-                                    return array_map(function($matkul) {
-                                        return ['nama' => $matkul, 'kelas' => null];
-                                    }, $gasalMataKuliah);
-                                }
-                                return $state;
-                            }),
+                    Hidden::make('mata_kuliah')
+                    ->default([])
+                    ->dehydrateStateUsing(function ($state, Get $get) {
+                         if ($get('semester') === 'gasal') {
+                         $gasalMataKuliah = $get('mata_kuliah_gasal') ?? [];
+                        return array_map(function($matkul) {
+                            return ['nama' => $matkul, 'kelas' => null];
+                            }, $gasalMataKuliah);
+                          } else if ($get('semester') === 'genap') {
+
+                        return $state ?? [];
+                    }
+                        return [];
+                           }),
                     ])
                     ->visible(fn (Get $get) => !empty($get('semester'))),
 

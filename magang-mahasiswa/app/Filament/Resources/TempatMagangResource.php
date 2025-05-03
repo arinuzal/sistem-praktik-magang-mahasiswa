@@ -26,6 +26,26 @@ class TempatMagangResource extends Resource
         return auth()->user()?->role === 'super admin';
     }
 
+    public static function getNavigationLabel(): string
+    {
+        return 'Tempat Magang';
+    }
+
+    public static function getPluralLabel(): string
+    {
+        return 'Tempat Magang';
+    }
+
+    public static function getSlug(): string
+    {
+         return 'tempat-magang';
+    }
+
+    public static function getNavigationGroup(): string
+    {
+        return 'Tempat Magang';
+    }
+
     public static function form(Form $form): Form
     {
         return $form->schema([

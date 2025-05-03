@@ -23,6 +23,21 @@ class UserResource extends Resource
 
     protected static ?int $navigationSort = 0;
 
+    public static function getNavigationLabel(): string
+    {
+       return 'User';
+    }
+
+    public static function getPluralLabel(): string
+    {
+        return 'User';
+    }
+
+    public static function getSlug(): string
+    {
+         return 'user';
+    }
+
     public static function canViewAny(): bool
     {
         return auth()->user()?->role === 'super admin';

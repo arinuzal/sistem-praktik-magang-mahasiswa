@@ -30,6 +30,26 @@ class InformasiMahasiswaResource extends Resource
         return auth()->user()?->role === 'admin';
     }
 
+    public static function getNavigationLabel(): string
+    {
+       return 'Mahasiswa';
+    }
+
+    public static function getPluralLabel(): string
+    {
+        return 'Mahasiswa';
+    }
+
+    public static function getSlug(): string
+    {
+         return 'informasi-mahasiswa';
+    }
+
+    public static function getNavigationGroup(): string
+    {
+        return 'Data Mahasiswa';
+    }
+
     public static function form(Forms\Form $form): Forms\Form
     {
         return $form

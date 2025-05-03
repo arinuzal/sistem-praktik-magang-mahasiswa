@@ -12,6 +12,7 @@ class Penilaian extends Model
     protected $fillable = [
         'mahasiswa_id',
         'nilai_magang',
+        'nilai_mediasi',
         'video_mediasi',
         'nilai_video_mediasi',
         'penyuluhan_perizinan',

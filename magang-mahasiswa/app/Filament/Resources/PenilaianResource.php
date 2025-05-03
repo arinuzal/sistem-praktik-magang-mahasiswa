@@ -27,6 +27,26 @@ class PenilaianResource extends Resource
         return in_array(auth()->user()?->role, ['admin', 'super admin']);
     }
 
+    public static function getNavigationLabel(): string
+    {
+       return 'Penilaian Mahasiswa';
+    }
+
+    public static function getPluralLabel(): string
+    {
+        return 'Penilaian';
+    }
+
+    public static function getSlug(): string
+    {
+         return 'penilaian-mahasiswa';
+    }
+
+    public static function getNavigationGroup(): string
+    {
+        return 'Penilaian';
+    }
+
     public static function form(Form $form): Form
     {
         $isEditMode = $form->getOperation() === 'edit';
@@ -72,6 +92,13 @@ class PenilaianResource extends Resource
                     }
                 }),
 
+            Forms\Components\TextInput::make('nilai_mediasi')
+                ->label('Nilai Mediasi')
+                ->numeric()
+                ->minValue(0)
+                ->maxValue(100)
+                ->required(),
+
             Forms\Components\TextInput::make('video_mediasi')
                 ->label('Link Video Pengurusan Perizinan')
                 ->url()
@@ -95,7 +122,8 @@ class PenilaianResource extends Resource
                 ->label('Nilai Video Pengurusan Perizinan')
                 ->numeric()
                 ->minValue(0)
-                ->maxValue(100),
+                ->maxValue(100)
+                ->required(),
 
             Forms\Components\TextInput::make('penyuluhan_perizinan')
                 ->label('Upload Link Laporan Penyuluhan')
@@ -120,13 +148,14 @@ class PenilaianResource extends Resource
                 ->label('Nilai Laporan Penyuluhan')
                 ->numeric()
                 ->minValue(0)
-                ->maxValue(100),
+                ->maxValue(100)
+                ->required(),
 
             Forms\Components\TextInput::make('nilai_akhir')
+                ->label('Nilai Akhir (otomatis)')
                 ->numeric()
                 ->disabled()
-                ->dehydrated(false)
-                ->label('Nilai Akhir (otomatis)'),
+                ->dehydrated(false),
 
             Forms\Components\Select::make('dosen_id')
                 ->label('Dosen Pembimbing')

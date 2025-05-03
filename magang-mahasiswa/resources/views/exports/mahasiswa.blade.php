@@ -18,6 +18,7 @@
                 <th>Nama</th>
                 <th>NIM</th>
                 <th>Semester</th>
+                <th>Kelompok</th>
                 <th>Status Dokumen</th>
                 <th>Status Magang</th>
                 <th>Tempat Magang</th>
@@ -30,6 +31,7 @@
                     <td>{{ $mhs->nama }}</td>
                     <td>{{ $mhs->nim }}</td>
                     <td>{{ $mhs->semester }}</td>
+                    <td>{{ $mhs->kelompok }}</td>
                     <td>{{ $mhs->status_dokumen }}</td>
                     <td>{{ $mhs->status_magang }}</td>
                     <td>{{ $mhs->tempatMagang->nama_instansi ?? '-' }}</td>
