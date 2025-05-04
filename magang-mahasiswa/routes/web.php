@@ -45,6 +45,7 @@ Route::middleware(['auth', 'role.strict:mahasiswa', 'prevent.back.history'])->gr
         Route::post('/mahasiswa/ceklis', [MahasiswaController::class, 'updateCeklis'])->name('mahasiswa.updateCeklis');
         Route::get('/sertifikat', [MahasiswaController::class, 'generateSertifikat'])->name('mahasiswa.cetak-sertifikat');
         Route::post('/mahasiswa/upload-video', [MahasiswaController::class, 'uploadVideo'])->name('mahasiswa.upload.video');
+        Route::post('/mahasiswa/upload-pdf', [MahasiswaController::class, 'uploadPdf'])->name('mahasiswa.upload.pdf');
     });
 });
 

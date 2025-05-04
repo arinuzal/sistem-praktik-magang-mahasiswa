@@ -194,4 +194,28 @@ protected function normalizeMataKuliahName(string $matkul): string
 
         return back()->with('success', 'Link video berhasil disimpan.');
     }
+
+    public function uploadPdf(Request $request)
+    {
+    $request->validate([
+        'artikel_pdf' => 'nullable|mimes:pdf|max:2048',
+        'laporan_penyuluhan_pdf' => 'nullable|mimes:pdf|max:2048',
+    ]);
+
+    $mahasiswa = auth()->user()->mahasiswa;
+
+    if ($request->hasFile('artikel_pdf')) {
+        $artikelPath = $request->file('artikel_pdf')->store('pdf/artikel', 'public');
+        $mahasiswa->artikel_pdf = $artikelPath;
+    }
+
+    if ($request->hasFile('laporan_penyuluhan_pdf')) {
+        $penyuluhanPath = $request->file('laporan_penyuluhan_pdf')->store('pdf/penyuluhan', 'public');
+        $mahasiswa->laporan_penyuluhan_pdf = $penyuluhanPath;
+    }
+
+    $mahasiswa->save();
+
+    return back()->with('success', 'Dokumen berhasil diupload!');
+}
 }
