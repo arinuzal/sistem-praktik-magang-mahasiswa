@@ -97,10 +97,14 @@ class UserResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('name')->searchable(),
-                TextColumn::make('email')->searchable(),
-                TextColumn::make('role')->badge()->searchable(),
-                TextColumn::make('created_at')->dateTime()->label('Dibuat'),
+                TextColumn::make('index')
+                ->label('No')
+                ->rowIndex()
+                ->alignCenter(),
+                TextColumn::make('name')->searchable()->sortable()->alignCenter(),
+                TextColumn::make('email')->searchable()->sortable()->alignCenter(),
+                TextColumn::make('role')->badge()->searchable()->sortable()->alignCenter(),
+                TextColumn::make('created_at')->dateTime()->label('Dibuat')->sortable()->alignCenter(),
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('role')
@@ -119,7 +123,7 @@ class UserResource extends Resource
                 Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
-                Tables\Actions\DeleteBulkAction::make(),
+                Tables\Actions\DeleteBulkAction::make()->label('Hapus'),
             ])
             ->headerActions([
                 Action::make('Export PDF')

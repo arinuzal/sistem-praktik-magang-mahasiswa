@@ -22,6 +22,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Get;
 use Filament\Forms\Set;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Database\Eloquent\Collection;
 
 class MahasiswaResource extends Resource
 {
@@ -390,6 +391,7 @@ class MahasiswaResource extends Resource
                 ->label('Nama')
                 ->searchable()
                 ->sortable()
+                ->alignCenter()
                 ->weight('medium')
                 ->description(fn (Mahasiswa $record) => $record->nim)
                 ->wrap(),
@@ -401,8 +403,8 @@ class MahasiswaResource extends Resource
                     'gasal' => 'info',
                     'genap' => 'success',
                 })
-                ->alignCenter()
-                ->sortable(),
+                ->sortable()
+                ->alignCenter(),
 
             TextColumn::make('nilai_magang')
                 ->label('Nilai Magang')
@@ -424,6 +426,7 @@ class MahasiswaResource extends Resource
                 ->label('Tempat Magang')
                 ->searchable()
                 ->sortable()
+                ->alignCenter()
                 ->wrap()
                 ->placeholder('Belum ada'),
 
@@ -432,8 +435,8 @@ class MahasiswaResource extends Resource
                 ->formatStateUsing(fn ($state): string => $state ? 'Luar Biasa' : 'Reguler')
                 ->badge()
                 ->color(fn (string $state): string => $state ? 'warning' : 'gray')
-                ->alignCenter()
-                ->sortable(),
+                ->sortable()
+                ->alignCenter(),
 
             TextColumn::make('status_dokumen')
                 ->label('Status Dokumen')
@@ -450,8 +453,8 @@ class MahasiswaResource extends Resource
                     'ditolak' => 'heroicon-o-x-circle',
                     default => 'heroicon-o-question-mark-circle',
                 })
-                ->alignCenter()
-                ->sortable(),
+                ->sortable()
+                ->alignCenter(),
 
             TextColumn::make('status_magang')
                 ->label('Status Magang')
@@ -468,8 +471,8 @@ class MahasiswaResource extends Resource
                     'selesai magang' => 'heroicon-o-check-badge',
                     default => 'heroicon-o-question-mark-circle',
                 })
-                ->alignCenter()
-                ->sortable(),
+                ->sortable()
+                ->alignCenter(),
         ])
         ->filters([
             Tables\Filters\SelectFilter::make('semester')
@@ -566,11 +569,86 @@ class MahasiswaResource extends Resource
                         return $record->link_artikel;
                     }, shouldOpenInNewTab: true)
                     ->visible(fn (Mahasiswa $record) => !empty($record->link_artikel)),
+
+                Tables\Actions\Action::make('lihat_artikel_pdf')
+                    ->label('Artikel PDF')
+                    ->icon('heroicon-o-document-text')
+                    ->color('primary')
+                    ->url(function (Mahasiswa $record) {
+                        return Storage::url(str_replace('public/', '', $record->artikel_pdf));
+                    })
+                    ->openUrlInNewTab()
+                    ->visible(fn (Mahasiswa $record) => !empty($record->artikel_pdf)),
+
+                Tables\Actions\Action::make('lihat_laporan_penyuluhan_pdf')
+                    ->label('Laporan Penyuluhan PDF')
+                    ->icon('heroicon-o-document-text')
+                    ->color('primary')
+                    ->url(function (Mahasiswa $record) {
+                        return Storage::url(str_replace('public/', '', $record->laporan_penyuluhan_pdf));
+                    })
+                    ->openUrlInNewTab()
+                    ->visible(fn (Mahasiswa $record) => !empty($record->laporan_penyuluhan_pdf)),
             ])
             ->label('Dokumen')
             ->icon('heroicon-o-folder')
             ->color('gray')
             ->dropdown(),
+        ])
+        ->bulkActions([
+            Tables\Actions\BulkActionGroup::make([
+                Tables\Actions\BulkAction::make('verifyDocuments')
+                    ->label('Setujui Dokumen')
+                    ->icon('heroicon-o-document-check')
+                    ->color('success')
+                    ->action(function (Collection $records) {
+                        $records->each(function ($record) {
+                            $record->update([
+                                'status_dokumen' => 'disetujui'
+                            ]);
+                        });
+                    })
+                    ->deselectRecordsAfterCompletion()
+                    ->visible(fn (): bool => auth()->user()->role === 'super admin'),
+
+                Tables\Actions\BulkAction::make('rejectDocuments')
+                    ->label('Tolak Dokumen')
+                    ->icon('heroicon-o-document-text')
+                    ->color('danger')
+                    ->action(function (Collection $records) {
+                        $records->each(function ($record) {
+                            $record->update([
+                                'status_dokumen' => 'ditolak'
+                            ]);
+                        });
+                    })
+                    ->deselectRecordsAfterCompletion()
+                    ->visible(fn (): bool => auth()->user()->role === 'super admin'),
+
+                Tables\Actions\BulkAction::make('updateInternshipStatus')
+                    ->label('Ubah Status Magang')
+                    ->icon('heroicon-o-briefcase')
+                    ->form([
+                        Select::make('status_magang')
+                            ->label('Status Magang Baru')
+                            ->options([
+                                'belum magang' => 'Belum Magang',
+                                'sedang magang' => 'Sedang Magang',
+                                'selesai magang' => 'Selesai Magang',
+                            ])
+                            ->required()
+                    ])
+                    ->action(function (Collection $records, array $data): void {
+                        $records->each(function ($record) use ($data) {
+                            $record->update([
+                                'status_magang' => $data['status_magang']
+                            ]);
+                        });
+                    })
+                    ->deselectRecordsAfterCompletion()
+                    ->visible(fn (): bool => in_array(auth()->user()->role, ['super admin'])),
+                Tables\Actions\DeleteBulkAction::make()->label('Hapus'),
+            ])
         ])
         ->defaultSort('nama', 'asc')
         ->striped();

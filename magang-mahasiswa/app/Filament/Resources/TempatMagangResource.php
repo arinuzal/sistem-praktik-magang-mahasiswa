@@ -13,6 +13,7 @@ use Filament\Tables;
 use Filament\Tables\Actions\Action;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\Filter;
+use Filament\Tables\Columns\TextColumn;
 
 class TempatMagangResource extends Resource
 {
@@ -74,12 +75,16 @@ class TempatMagangResource extends Resource
     public static function table(Table $table): Table
     {
         return $table->columns([
-        Tables\Columns\TextColumn::make('user.name')->label('User')->searchable(),
-            Tables\Columns\TextColumn::make('nama_instansi')->searchable(),
-            Tables\Columns\TextColumn::make('alamat')->searchable()->limit(30),
-            Tables\Columns\TextColumn::make('kontak')->searchable(),
-            Tables\Columns\TextColumn::make('bidang_usaha')->searchable(),
-            Tables\Columns\TextColumn::make('created_at')->dateTime()->since(),
+            TextColumn::make('index')
+                ->label('No')
+                ->rowIndex()
+                ->alignCenter(),
+            Tables\Columns\TextColumn::make('user.name')->label('User')->searchable()->sortable(),
+            Tables\Columns\TextColumn::make('nama_instansi')->searchable()->sortable(),
+            Tables\Columns\TextColumn::make('alamat')->searchable()->limit(30)->sortable(),
+            Tables\Columns\TextColumn::make('kontak')->searchable()->sortable(),
+            Tables\Columns\TextColumn::make('bidang_usaha')->searchable()->sortable(),
+            TextColumn::make('created_at')->dateTime()->label('Dibuat')->sortable(),
         ])
         ->filters([
             SelectFilter::make('bidang_usaha')
@@ -104,7 +109,7 @@ class TempatMagangResource extends Resource
             Tables\Actions\DeleteAction::make(),
         ])
         ->bulkActions([
-            Tables\Actions\DeleteBulkAction::make(),
+            Tables\Actions\DeleteBulkAction::make()->label('Hapus'),
         ])
         ->headerActions([
             Action::make('Export PDF')

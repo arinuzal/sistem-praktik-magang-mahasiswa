@@ -15,6 +15,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use Filament\Tables\Columns\TextColumn;
 
 class PenilaianResource extends Resource
 {
@@ -50,6 +51,7 @@ class PenilaianResource extends Resource
     public static function form(Form $form): Form
     {
         $isEditMode = $form->getOperation() === 'edit';
+        $record = $form->getRecord();
 
         return $form->schema([
             Forms\Components\Select::make('mahasiswa_id')
@@ -83,6 +85,14 @@ class PenilaianResource extends Resource
                 ->required()
                 ->disabled(fn () => !$isEditMode)
                 ->dehydrated(true)
+                ->afterStateHydrated(function ($state, $record, Set $set) {
+                    if ($record && $record->mahasiswa_id) {
+                        $mahasiswa = Mahasiswa::find($record->mahasiswa_id);
+                        if ($mahasiswa) {
+                            $set('nilai_magang', $mahasiswa->nilai_magang);
+                        }
+                    }
+                })
                 ->live(onBlur: true)
                 ->afterStateUpdated(function ($state, $record, Set $set) {
                     if ($record && $record->mahasiswa_id) {
@@ -106,8 +116,11 @@ class PenilaianResource extends Resource
                 ->reactive()
                 ->disabled(fn () => !$isEditMode)
                 ->afterStateHydrated(function ($state, $record, Set $set) {
-                    if ($record && $record->mahasiswa) {
-                        $set('video_mediasi', $record->mahasiswa->video_mediasi);
+                    if ($record && $record->mahasiswa_id) {
+                        $mahasiswa = Mahasiswa::find($record->mahasiswa_id);
+                        if ($mahasiswa) {
+                            $set('video_mediasi', $mahasiswa->video_mediasi);
+                        }
                     }
                 })
                 ->afterStateUpdated(function ($state, $record, Set $set) {
@@ -132,8 +145,11 @@ class PenilaianResource extends Resource
                 ->reactive()
                 ->disabled(fn () => !$isEditMode)
                 ->afterStateHydrated(function ($state, $record, Set $set) {
-                    if ($record && $record->mahasiswa) {
-                        $set('penyuluhan_perizinan', $record->mahasiswa->video_penyuluhan);
+                    if ($record && $record->mahasiswa_id) {
+                        $mahasiswa = Mahasiswa::find($record->mahasiswa_id);
+                        if ($mahasiswa) {
+                            $set('penyuluhan_perizinan', $mahasiswa->video_penyuluhan);
+                        }
                     }
                 })
                 ->afterStateUpdated(function ($state, $record, Set $set) {
@@ -168,35 +184,47 @@ class PenilaianResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('mahasiswa.nim')->label('NIM')->searchable(),
-                Tables\Columns\TextColumn::make('mahasiswa.nama')->label('Nama')->searchable(),
-                Tables\Columns\TextColumn::make('nilai_magang')->label('Nilai Magang'),
+                TextColumn::make('index')
+                ->label('No')
+                ->rowIndex()
+                ->alignCenter(),
+                Tables\Columns\TextColumn::make('mahasiswa.nim')->label('NIM')->searchable()->sortable()->alignCenter(),
+                Tables\Columns\TextColumn::make('mahasiswa.nama')->label('Nama')->searchable()->sortable()->alignCenter(),
+                Tables\Columns\TextColumn::make('mahasiswa.nilai_magang')
+                    ->label('Nilai Magang')
+                    ->sortable()
+                    ->alignCenter()
+                    ->getStateUsing(function ($record) {
+                        if ($record->mahasiswa_id) {
+                            $mahasiswa = Mahasiswa::find($record->mahasiswa_id);
+                            return $mahasiswa ? $mahasiswa->nilai_magang : null;
+                        }
+                        return null;
+                    })
+                    ->color(function ($state) {
+                        if ($state >= 85) return 'success';
+                        if ($state >= 70) return 'warning';
+                        return 'danger';
+                    })
+                    ->icon(function ($state) {
+                        if ($state >= 70) return 'heroicon-o-check-circle';
+                        return 'heroicon-o-x-circle';
+                    })
+                    ->placeholder('Belum ada'),
+                TextColumn::make('created_at')->dateTime()->label('Dibuat')->sortable()->alignCenter(),
             ])
             ->filters([])
             ->actions([
-                Tables\Actions\ViewAction::make(),
+                Tables\Actions\ViewAction::make()
+                    ->before(function ($action, $record) {
+                        if ($record && $record->mahasiswa) {
+                            $record->mahasiswa->refresh();
+                        }
+                    }),
                 Tables\Actions\EditAction::make()
-                    ->before(function (Penilaian $record, array $data) {
-                        if ($record->mahasiswa_id) {
-                            $updates = [];
-
-                            if (isset($data['nilai_magang'])) {
-                                $updates['nilai_magang'] = $data['nilai_magang'];
-                            }
-
-                            if (isset($data['video_mediasi'])) {
-                                $updates['video_mediasi'] = $data['video_mediasi'];
-                            }
-
-                            if (isset($data['penyuluhan_perizinan'])) {
-                                $updates['video_penyuluhan'] = $data['penyuluhan_perizinan'];
-                            }
-
-                            if (!empty($updates)) {
-                                DB::table('mahasiswas')
-                                    ->where('id', $record->mahasiswa_id)
-                                    ->update($updates);
-                            }
+                    ->before(function ($action, $record) {
+                        if ($record && $record->mahasiswa) {
+                            $record->mahasiswa->refresh();
                         }
                     })
                     ->after(function (Penilaian $record) {
@@ -205,6 +233,9 @@ class PenilaianResource extends Resource
                         }
                     }),
                 Tables\Actions\DeleteAction::make(),
+            ])
+            ->bulkActions([
+                Tables\Actions\DeleteBulkAction::make()->label('Hapus'),
             ]);
     }
 

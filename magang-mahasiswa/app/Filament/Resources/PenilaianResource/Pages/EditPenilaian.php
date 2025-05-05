@@ -33,7 +33,7 @@ class EditPenilaian extends EditRecord
         $nilaiVideo = $data['nilai_video_mediasi'] ?? 0;
         $nilaiPenyuluhan = $data['nilai_penyuluhan'] ?? 0;
 
-        return round(($nilaiMagang + $nilaiVideo + $nilaiPenyuluhan) / 4, 2);
+        return round(($nilaiMagang + $nilaiMediasi + $nilaiVideo + $nilaiPenyuluhan) / 4, 2);
     }
 
     protected function afterSave(): void

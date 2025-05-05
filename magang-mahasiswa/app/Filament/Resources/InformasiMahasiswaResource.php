@@ -15,6 +15,8 @@ use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Placeholder;
 use Filament\Tables\Columns\IconColumn;
 use App\Filament\Resources\InformasiMahasiswaResource\Pages;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\Storage;
 
 class InformasiMahasiswaResource extends Resource
 {
@@ -168,6 +170,7 @@ class InformasiMahasiswaResource extends Resource
                 ->label('Nama')
                 ->searchable()
                 ->sortable()
+                ->alignCenter()
                 ->weight('medium')
                 ->description(fn (Mahasiswa $record) => $record->nim)
                 ->wrap(),
@@ -175,16 +178,19 @@ class InformasiMahasiswaResource extends Resource
                 TextColumn::make('semester')
                  ->label('Semester')
                  ->badge()
+                ->alignCenter()
                  ->color(fn (string $state): string => match ($state) {
                      'gasal' => 'info',
                      'genap' => 'success',
                  })
-                 ->alignCenter()
-                 ->sortable(),
+                 ->sortable()
+                 ->alignCenter(),
 
                 Tables\Columns\TextColumn::make('kelompok')
                     ->label('Kelompok')
-                    ->sortable(),
+                    ->sortable()
+                    ->alignCenter()
+                    ->placeholder('Belum ada'),
 
                     TextColumn::make('nilai_magang')
                     ->label('Nilai Magang')
@@ -205,12 +211,23 @@ class InformasiMahasiswaResource extends Resource
                 Tables\Columns\TextColumn::make('penilaian.nilai_akhir')
                     ->label('Nilai Akhir')
                     ->sortable()
+                    ->alignCenter()
+                    ->color(function ($state) {
+                        if ($state >= 85) return 'success';
+                        if ($state >= 70) return 'warning';
+                        return 'danger';
+                    })
+                    ->icon(function ($state) {
+                        if ($state >= 70) return 'heroicon-o-check-circle';
+                        return 'heroicon-o-x-circle';
+                    })
                     ->placeholder('Belum ada'),
 
                 Tables\Columns\TextColumn::make('tempatMagang.nama_instansi')
                     ->label('Tempat Magang')
                     ->placeholder('Belum ada')
                     ->sortable()
+                    ->alignCenter()
                     ->searchable(),
 
                 TextColumn::make('is_luar_biasa')
@@ -218,13 +235,14 @@ class InformasiMahasiswaResource extends Resource
                     ->formatStateUsing(fn ($state): string => $state ? 'Luar Biasa' : 'Reguler')
                     ->badge()
                     ->color(fn (string $state): string => $state ? 'warning' : 'gray')
-                    ->alignCenter()
-                    ->sortable(),
+                    ->sortable()
+                    ->alignCenter(),
 
                 Tables\Columns\TextColumn::make('status_dokumen')
                     ->label('Status Dokumen')
                     ->badge()
                     ->sortable()
+                    ->alignCenter()
                     ->color(fn (string $state): string => match ($state) {
                         'disetujui' => 'success',
                         'ditolak' => 'danger',
@@ -236,6 +254,7 @@ class InformasiMahasiswaResource extends Resource
                     ->label('Status Magang')
                     ->badge()
                     ->sortable()
+                    ->alignCenter()
                     ->color(fn (string $state): string => match ($state) {
                         'belum magang' => 'gray',
                         'sedang magang' => 'warning',
@@ -318,11 +337,86 @@ class InformasiMahasiswaResource extends Resource
                             return $record->link_artikel;
                         }, shouldOpenInNewTab: true)
                         ->visible(fn (Mahasiswa $record) => !empty($record->link_artikel)),
+
+                    Tables\Actions\Action::make('lihat_artikel_pdf')
+                        ->label('Artikel PDF')
+                        ->icon('heroicon-o-document-text')
+                        ->color('primary')
+                        ->url(function (Mahasiswa $record) {
+                            return Storage::url(str_replace('public/', '', $record->artikel_pdf));
+                        })
+                        ->openUrlInNewTab()
+                        ->visible(fn (Mahasiswa $record) => !empty($record->artikel_pdf)),
+
+                    Tables\Actions\Action::make('lihat_laporan_penyuluhan_pdf')
+                        ->label('Laporan Penyuluhan PDF')
+                        ->icon('heroicon-o-document-text')
+                        ->color('primary')
+                        ->url(function (Mahasiswa $record) {
+                            return Storage::url(str_replace('public/', '', $record->laporan_penyuluhan_pdf));
+                        })
+                        ->openUrlInNewTab()
+                        ->visible(fn (Mahasiswa $record) => !empty($record->laporan_penyuluhan_pdf)),
                 ])
                 ->label('Dokumen')
                 ->icon('heroicon-o-folder')
                 ->color('gray')
                 ->dropdown(),
+            ])
+            ->bulkActions([
+                Tables\Actions\BulkActionGroup::make([
+                    Tables\Actions\BulkAction::make('verifyDocuments')
+                        ->label('Setujui Dokumen')
+                        ->icon('heroicon-o-document-check')
+                        ->color('success')
+                        ->action(function (Collection $records) {
+                            $records->each(function ($record) {
+                                $record->update([
+                                    'status_dokumen' => 'disetujui'
+                                ]);
+                            });
+                        })
+                        ->deselectRecordsAfterCompletion()
+                        ->visible(fn (): bool => auth()->user()->role === 'admin'),
+
+                    Tables\Actions\BulkAction::make('rejectDocuments')
+                        ->label('Tolak Dokumen')
+                        ->icon('heroicon-o-document-text')
+                        ->color('danger')
+                        ->action(function (Collection $records) {
+                            $records->each(function ($record) {
+                                $record->update([
+                                    'status_dokumen' => 'ditolak'
+                                ]);
+                            });
+                        })
+                        ->deselectRecordsAfterCompletion()
+                        ->visible(fn (): bool => auth()->user()->role === 'admin'),
+
+                    Tables\Actions\BulkAction::make('updateInternshipStatus')
+                        ->label('Ubah Status Magang')
+                        ->icon('heroicon-o-briefcase')
+                        ->form([
+                            Select::make('status_magang')
+                                ->label('Status Magang Baru')
+                                ->options([
+                                    'belum magang' => 'Belum Magang',
+                                    'sedang magang' => 'Sedang Magang',
+                                    'selesai magang' => 'Selesai Magang',
+                                ])
+                                ->required()
+                        ])
+                        ->action(function (Collection $records, array $data): void {
+                            $records->each(function ($record) use ($data) {
+                                $record->update([
+                                    'status_magang' => $data['status_magang']
+                                ]);
+                            });
+                        })
+                        ->deselectRecordsAfterCompletion()
+                        ->visible(fn (): bool => in_array(auth()->user()->role, ['admin'])),
+                    Tables\Actions\DeleteBulkAction::make()->label('Hapus'),
+                ])
             ])
             ->defaultSort('nama', 'asc')
             ->striped();
