@@ -117,9 +117,11 @@
                             <p class="text-sm text-gray-500">Status Dokumen</p>
                             <span
                                 class="font-medium
-                                @if ($mahasiswa->status_dokumen == 'disetujui') text-green-600
-                                @elseif($mahasiswa->status_dokumen == 'ditolak') text-red-600
-                                @else text-yellow-600 @endif">
+                            {{ $mahasiswa->status_dokumen == 'disetujui'
+                                ? 'text-green-600'
+                                : ($mahasiswa->status_dokumen == 'ditolak'
+                                    ? 'text-red-600'
+                                    : 'text-yellow-600') }}">
                                 {{ $mahasiswa->status_dokumen }}
                             </span>
                         </div>
@@ -195,11 +197,10 @@
 
                             <div>
                                 <p class="text-sm text-gray-500">Status Magang</p>
-                                <span
-                                    class="font-medium
-                                @if ($mahasiswa->status_magang == 'aktif') text-green-600
-                                @elseif($mahasiswa->status_magang == 'selesai') text-blue-600
-                                @else text-gray-600 @endif">
+                                <span class="font-medium {{
+                                    $mahasiswa->status_magang == 'selesai magang' ? 'text-green-600' :
+                                    ($mahasiswa->status_magang == 'sedang magang' ? 'text-blue-600' : 'text-gray-600')
+                                }}">
                                     {{ $mahasiswa->status_magang }}
                                 </span>
                             </div>
@@ -208,11 +209,10 @@
                                 <div>
                                     <p class="text-sm text-gray-500">Nilai Magang</p>
                                     <div class="flex items-center">
-                                        <span
-                                            class="text-2xl font-bold
-                                    @if ($mahasiswa->nilai_magang >= 85) text-green-600
-                                    @elseif($mahasiswa->nilai_magang >= 70) text-blue-600
-                                    @else text-yellow-600 @endif">
+                                        <span class="text-2xl font-bold {{
+                                            $mahasiswa->nilai_magang >= 85 ? 'text-green-600' :
+                                            ($mahasiswa->nilai_magang >= 70 ? 'text-blue-600' : 'text-yellow-600')
+                                        }}">
                                             {{ $mahasiswa->nilai_magang }}
                                         </span>
                                         @if ($mahasiswa->nilai_magang >= 70)
