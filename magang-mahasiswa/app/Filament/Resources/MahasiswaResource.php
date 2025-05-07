@@ -406,6 +406,12 @@ class MahasiswaResource extends Resource
                 ->sortable()
                 ->alignCenter(),
 
+            Tables\Columns\TextColumn::make('kelompok')
+                ->label('Kelompok')
+                ->sortable()
+                ->alignCenter()
+                ->placeholder('Belum ada'),
+
             TextColumn::make('nilai_magang')
                 ->label('Nilai Magang')
                 ->numeric()
